@@ -42,16 +42,34 @@ class c_googleauth extends Controller
             ]
         );
 
-        // 🔐 LOGIN
-        Auth::guard('web')->login($user);
-        $request->session()->regenerate();
+            if ($user) {
+                $user->update([
+                    'google_id' => $googleUser->getId(),
+                    'google_token' => $googleUser->token ?? null,
+                    'google_refresh_token' => $googleUser->refreshToken ?? null,
+                    'avatar' => $googleUser->getAvatar(),
+                ]);
+            } else {
+                $user = m_akun::create([
+                    'nama_lengkap' => $googleUser->getName() ?? 'User Google',
+                    'email' => $googleUser->getEmail(),
+                    'google_id' => $googleUser->getId(),
+                    'google_token' => $googleUser->token ?? null,
+                    'google_refresh_token' => $googleUser->refreshToken ?? null,
+                    'avatar' => $googleUser->getAvatar(),
+                    'password' => bcrypt('google_login_dummy_password'),
+                    'is_admin' => 0,
+                ]);
+            }
 
         // redirect sesuai role
         if ($user->is_admin == 1) {
             return redirect('/admin/dashboard');
         }
 
-        return redirect('/dashboard');
+            if ($user->is_admin === 1) {
+                return redirect('/admin/dashboard');
+            }
 
     } catch (\Exception $e) {
         // dd($e->getMessage());

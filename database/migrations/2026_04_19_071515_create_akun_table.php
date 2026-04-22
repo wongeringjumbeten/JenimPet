@@ -15,12 +15,12 @@ return new class extends Migration
             $table->string('password', 255)->nullable();
             $table->string('no_telp', 13)->nullable();
             $table->string('alamat', 50)->nullable();
-            $table->char('is_admin', 1)->default('0');
+            $table->boolean('is_admin', 1)->default(0);
 
             // KOLOM UNTUK GOOGLE OAUTH
-            $table->string('google_id')->nullable()->unique();
-            $table->string('google_token')->nullable();
-            $table->string('google_refresh_token')->nullable();
+            $table->text('google_id')->nullable()->unique();
+            $table->text('google_token')->nullable();
+            $table->text('google_refresh_token')->nullable();
             $table->string('avatar')->nullable();
 
             $table->unsignedBigInteger('kecamatan_id')->nullable();
