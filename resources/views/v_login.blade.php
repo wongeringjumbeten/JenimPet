@@ -6,7 +6,7 @@
     <title>Jenim Hamster Farm — Sign in</title>
 
     {{-- Vite + Tailwind CSS v4 --}}
-    @vite(['resources/css/app.css', 'resources/js/app.js'])
+    @vite(['resources/css/app.css'])
 
     {{-- Google Fonts --}}
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700;800&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -14,7 +14,7 @@
 <body class="antialiased overflow-x-hidden bg-gradient-custom min-h-screen">
 
     {{-- Container untuk hujan hamster (diisi oleh JS) --}}
-    <div id="hamster-rain-container"></div>
+    {{-- <div id="hamster-rain-container"></div> --}}
 
     <main class="min-h-screen w-full flex items-center justify-center px-6 py-12 relative z-10">
         <div class="max-w-6xl w-full mx-auto grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
@@ -56,9 +56,10 @@
                         </div>
 
                         {{-- Tombol Google --}}
-                        <a href="{{ url('/auth/google') }}" class="google-btn">
-                        <img src="{{ asset('icons/GoogleIcon.png') }}" alt="Google" class="w-5 h-5 object-contain">
-                        <span>Continue with Google</span>
+                        <a href="/auth/google"
+                        onclick="event.stopImmediatePropagation(); return true;"
+                        class="google-btn block text-center">
+                        Continue with Google
                         </a>
 
                         {{-- Terms & Privacy --}}

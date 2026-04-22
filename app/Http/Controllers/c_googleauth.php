@@ -13,22 +13,34 @@ class c_googleauth extends Controller
     public function redirectToGoogle()
     {
         try {
-            return Socialite::driver('google')->redirect();
+            return Socialite::driver('google')
+            ->stateless()
+            ->with(['prompt' => 'select_account'])
+            ->redirect();
         } catch (Exception $e) {
             return redirect('/login')->with('error', 'Gagal menghubungkan ke Google.');
-        }
-    }
-
-    public function handleGoogleCallback(Request $request)
-    {
-        try {
-            $googleUser = Socialite::driver('google')->user();
-
-            if (!$googleUser->getEmail()) {
-                return redirect('/login')->with('error', 'Email akun Google tidak tersedia.');
+            }
             }
 
-            $user = m_akun::where('email', $googleUser->getEmail())->first();
+            public function handleGoogleCallback(Request $request)
+    {
+        if ($request->has('error')) {
+        return redirect('/login')->with('error', 'Login dibatalkan');
+    }
+
+    try {
+        $googleUser = Socialite::driver('google')->stateless()->user();
+
+        // 🔥 GANTI DI SINI
+        $user = m_akun::firstOrCreate(
+            ['email' => $googleUser->getEmail()],
+            [
+                'nama_lengkap' => $googleUser->getName() ?? 'User Google',
+                'google_id' => $googleUser->getId(),
+                'password' => bcrypt('dummy'),
+                'is_admin' => '0',
+            ]
+        );
 
             if ($user) {
                 $user->update([
@@ -50,27 +62,28 @@ class c_googleauth extends Controller
                 ]);
             }
 
-            Auth::login($user, true);
-            $request->session()->regenerate();
+        // redirect sesuai role
+        if ($user->is_admin == 1) {
+            return redirect('/admin/dashboard');
+        }
 
             if ($user->is_admin === 1) {
                 return redirect('/admin/dashboard');
             }
 
-            return redirect('/dashboard');
-        } catch (Exception $e) {
-            return redirect('/login')->with('error', 'Login Google gagal. Silakan coba lagi.');
-        }
+    } catch (\Exception $e) {
+        // dd($e->getMessage());
+        return redirect('/login')->with('error', 'Login gagal');
+    }
     }
 
     public function logout(Request $request)
     {
-        Auth::logout();
+    Auth::guard('web')->logout();
 
-        $request->session()->invalidate();
-        $request->session()->regenerateToken();
-        $request->session()->regenerate();
+    $request->session()->invalidate();
+    $request->session()->regenerateToken();
 
-        return redirect('/login')->with('success', 'Berhasil logout.');
+    return redirect('/login');
     }
 }

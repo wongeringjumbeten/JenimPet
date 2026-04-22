@@ -164,6 +164,14 @@
     opacity: 0;
 }
 
+/* 🔥 TAMBAHAN BARU — INI YANG FIX */
+#hamster-rain-container {
+    position: fixed;
+    inset: 0;
+    pointer-events: none; /* 🔥 INI KUNCI */
+    z-index: 0;
+}
+
 /* ===== Utility tambahan ===== */
 body {
     font-family: 'DM Sans', sans-serif;
@@ -330,3 +338,9 @@ body {
 .nav-item-wrapper:hover .nav-link-custom {
     color: white;
 } */
+
+.google-btn {
+    position: relative;
+    z-index: 9999;
+    pointer-events: auto;
+}
