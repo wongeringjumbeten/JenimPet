@@ -46,14 +46,14 @@ class c_googleauth extends Controller
                     'google_refresh_token' => $googleUser->refreshToken ?? null,
                     'avatar' => $googleUser->getAvatar(),
                     'password' => bcrypt('google_login_dummy_password'),
-                    'is_admin' => '0',
+                    'is_admin' => 0,
                 ]);
             }
 
             Auth::login($user, true);
             $request->session()->regenerate();
 
-            if ($user->is_admin === '1') {
+            if ($user->is_admin === 1) {
                 return redirect('/admin/dashboard');
             }
 
