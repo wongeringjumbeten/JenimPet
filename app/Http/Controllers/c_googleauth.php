@@ -19,12 +19,12 @@ class c_googleauth extends Controller
             ->redirect();
         } catch (Exception $e) {
             return redirect('/login')->with('error', 'Gagal menghubungkan ke Google.');
-        }
-    }
+            }
+            }
 
-    public function handleGoogleCallback(Request $request)
+            public function handleGoogleCallback(Request $request)
     {
-    if ($request->has('error')) {
+        if ($request->has('error')) {
         return redirect('/login')->with('error', 'Login dibatalkan');
     }
 
@@ -47,13 +47,14 @@ class c_googleauth extends Controller
         $request->session()->regenerate();
 
         // redirect sesuai role
-        if ($user->is_admin === '1') {
+        if ($user->is_admin == 1) {
             return redirect('/admin/dashboard');
         }
 
         return redirect('/dashboard');
 
     } catch (\Exception $e) {
+        // dd($e->getMessage());
         return redirect('/login')->with('error', 'Login gagal');
     }
     }

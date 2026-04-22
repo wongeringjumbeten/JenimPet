@@ -14,7 +14,7 @@ return new class extends Migration
             $table->string('email', 50)->unique();
             $table->string('password', 255)->nullable();
             $table->string('no_telp', 13)->nullable();
-            $table->string('alamat', 50)->nullable(); 
+            $table->string('alamat', 50)->nullable();
             $table->char('is_admin', 1)->default('0');
 
             // KOLOM UNTUK GOOGLE OAUTH
