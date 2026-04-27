@@ -27,9 +27,9 @@ return new class extends Migration
             $table->timestamps();
 
             $table->foreign('kecamatan_id')
-                  ->references('id_kecamatan')
-                  ->on('kecamatan')
-                  ->onDelete('set null');
+                ->references('id_kecamatan')
+                ->on('kecamatan')
+                ->onDelete('set null');
         });
     }
 

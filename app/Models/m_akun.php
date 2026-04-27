@@ -36,5 +36,8 @@ class m_akun extends Authenticatable // ← EXTENDS Authenticatable
     {
     return 'id_akun';
     }
+    protected $casts = [
+    'is_admin' => 'boolean',
+    ];
 }
 

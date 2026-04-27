@@ -13,16 +13,14 @@ class AdminMiddleware
      */
     public function handle(Request $request, Closure $next)
     {
-        // 🔒 Cek apakah user sudah login
-        if (!Auth::check()) {
-            return redirect('/login')->with('error', 'Silakan login terlebih dahulu');
-        }
+    if (!Auth::check()) {
+        return redirect('/login')->with('error', 'Silakan login terlebih dahulu');
+    }
 
-        // 🔒 Cek apakah admin
-        if (Auth::user()->is_admin !== '1') {
-            return redirect('/dashboard')->with('error', 'Akses ditolak, bukan admin');
-        }
+    if (!Auth::user()->is_admin) {
+        return redirect('/dashboard')->with('error', 'Akses ditolak, bukan admin');
+    }
 
-        return $next($request);
+    return $next($request);
     }
 }

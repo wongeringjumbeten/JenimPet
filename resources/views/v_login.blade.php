@@ -6,7 +6,7 @@
     <title>Jenim Hamster Farm — Sign in</title>
 
     {{-- Vite + Tailwind CSS v4 --}}
-    @vite(['resources/css/app.css'])
+    @vite(['resources/css/app.css', 'resources/js/app.js'])
 
     {{-- Google Fonts --}}
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700;800&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -56,9 +56,7 @@
                         </div>
 
                         {{-- Tombol Google --}}
-                        <a href="/auth/google"
-                        onclick="event.stopImmediatePropagation(); return true;"
-                        class="google-btn block text-center">
+                        <a href="{{ route('google.login') }}" class="google-btn block text-center">
                         Continue with Google
                         </a>
 

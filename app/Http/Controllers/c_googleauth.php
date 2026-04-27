@@ -24,14 +24,13 @@ class c_googleauth extends Controller
 
             public function handleGoogleCallback(Request $request)
     {
-        if ($request->has('error')) {
+    if ($request->has('error')) {
         return redirect('/login')->with('error', 'Login dibatalkan');
     }
 
     try {
         $googleUser = Socialite::driver('google')->stateless()->user();
 
-        // 🔥 GANTI DI SINI
         $user = m_akun::firstOrCreate(
             ['email' => $googleUser->getEmail()],
             [
@@ -42,37 +41,26 @@ class c_googleauth extends Controller
             ]
         );
 
-            if ($user) {
-                $user->update([
-                    'google_id' => $googleUser->getId(),
-                    'google_token' => $googleUser->token ?? null,
-                    'google_refresh_token' => $googleUser->refreshToken ?? null,
-                    'avatar' => $googleUser->getAvatar(),
-                ]);
-            } else {
-                $user = m_akun::create([
-                    'nama_lengkap' => $googleUser->getName() ?? 'User Google',
-                    'email' => $googleUser->getEmail(),
-                    'google_id' => $googleUser->getId(),
-                    'google_token' => $googleUser->token ?? null,
-                    'google_refresh_token' => $googleUser->refreshToken ?? null,
-                    'avatar' => $googleUser->getAvatar(),
-                    'password' => bcrypt('google_login_dummy_password'),
-                    'is_admin' => 0,
-                ]);
-            }
+        // update data
+        $user->update([
+            'google_id' => $googleUser->getId(),
+            'google_token' => $googleUser->token ?? null,
+            'google_refresh_token' => $googleUser->refreshToken ?? null,
+            'avatar' => $googleUser->getAvatar(),
+        ]);
+
+        // 🔥 INI YANG HILANG
+        Auth::login($user);
+        $request->session()->regenerate();
 
         // redirect sesuai role
-        if ($user->is_admin == 1) {
+        if ($user->is_admin) {
             return redirect('/admin/dashboard');
         }
 
-            if ($user->is_admin === 1) {
-                return redirect('/admin/dashboard');
-            }
+        return redirect('/dashboard');
 
     } catch (\Exception $e) {
-        // dd($e->getMessage());
         return redirect('/login')->with('error', 'Login gagal');
     }
     }
