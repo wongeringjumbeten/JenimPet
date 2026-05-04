@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <title>Edit Alamat</title>
     @vite('resources/css/app.css')
+    <meta name="csrf-token" content="{{ csrf_token() }}">
 </head>
 
 <body class="bg-[#EFE7DC] min-h-screen flex items-center justify-center">
@@ -14,7 +15,6 @@
         Edit Alamat
     </h1>
 
-    {{-- ERROR --}}
     @if($errors->any())
         <div class="mb-4 p-3 bg-red-100 text-red-600 rounded-lg text-sm">
             {{ $errors->first() }}
@@ -24,132 +24,200 @@
     <form action="{{ route('profile.update.alamat') }}" method="POST" id="formAlamat">
         @csrf
 
-        {{-- PROVINSI --}}
-<div class="mb-3">
-    <input type="text" id="provinsi" name="provinsi"
-        placeholder="Provinsi"
-        class="w-full p-3 rounded-xl border border-[#E0CFC0]"
-        autocomplete="off">
+        {{-- DETAIL ALAMAT (JALAN, RT/RW, DLL) --}}
+        <div class="mb-4">
+            <textarea id="detail_alamat" name="detail_alamat"
+                rows="3"
+                placeholder="Detail alamat (contoh: Jl. Mawar No. 12, RT 01 RW 02)"
+                class="w-full p-3 rounded-xl border border-[#E0CFC0] focus:outline-none focus:border-[#D4A574]">{{ old('detail_alamat', $user->detail_alamat ?? '') }}</textarea>
+        </div>
 
-    <p id="errorProv" class="text-red-500 text-sm mt-1 hidden"></p>
-</div>
+        {{-- HIDDEN FIELDS UNTUK KODE WILAYAH --}}
+        <input type="hidden" id="provinsi_kode" name="provinsi_kode">
+        <input type="hidden" id="kota_kode" name="kota_kode">
+        <input type="hidden" id="kecamatan_kode" name="kecamatan_kode">
 
-{{-- KOTA --}}
-<div class="mb-3">
-    <input type="text" id="kota" name="kota"
-        placeholder="Kota / Kabupaten"
-        class="w-full p-3 rounded-xl border border-[#E0CFC0]"
-        autocomplete="off">
+        {{-- PROVINSI (DROPDOWN) --}}
+        <div class="mb-3">
+            <select id="provinsi" name="provinsi"
+                class="w-full p-3 rounded-xl border border-[#E0CFC0] focus:outline-none focus:border-[#D4A574] bg-white">
+                <option value="">-- Pilih Provinsi --</option>
+            </select>
+            <p id="errorProv" class="text-red-500 text-sm mt-1 hidden"></p>
+        </div>
 
-    <p id="errorKota" class="text-red-500 text-sm mt-1 hidden"></p>
-</div>
+        {{-- KOTA (DROPDOWN) --}}
+        <div class="mb-3">
+            <select id="kota" name="kota"
+                class="w-full p-3 rounded-xl border border-[#E0CFC0] focus:outline-none focus:border-[#D4A574] bg-white" disabled>
+                <option value="">-- Pilih Kabupaten/Kota --</option>
+            </select>
+            <p id="errorKota" class="text-red-500 text-sm mt-1 hidden"></p>
+        </div>
 
-{{-- KECAMATAN --}}
-<div class="mb-6">
-    <input type="text" id="kecamatan" name="kecamatan"
-        placeholder="Kecamatan"
-        class="w-full p-3 rounded-xl border border-[#E0CFC0]"
-        autocomplete="off">
-
-    <p id="errorKecamatan" class="text-red-500 text-sm mt-1 hidden"></p>
-</div>
+        {{-- KECAMATAN (DROPDOWN) --}}
+        <div class="mb-6">
+            <select id="kecamatan" name="kecamatan"
+                class="w-full p-3 rounded-xl border border-[#E0CFC0] focus:outline-none focus:border-[#D4A574] bg-white" disabled>
+                <option value="">-- Pilih Kecamatan --</option>
+            </select>
+            <p id="errorKecamatan" class="text-red-500 text-sm mt-1 hidden"></p>
+        </div>
 
         <div class="flex gap-3">
-
             <a href="{{ route('profile') }}"
-            class="w-full text-center py-3 rounded-xl border border-[#D4A574] text-[#D4A574]">
+                class="w-full text-center py-3 rounded-xl border border-[#D4A574] text-[#D4A574] hover:bg-[#D4A574]/10 transition">
                 Batal
             </a>
 
             <button type="submit" id="btnSubmit"
-            class="w-full py-3 rounded-xl text-white bg-[#D4A574] flex justify-center items-center gap-2">
-
+                class="w-full py-3 rounded-xl text-white bg-[#D4A574] hover:bg-[#B8965A] transition flex justify-center items-center gap-2">
                 <span id="btnText">Simpan</span>
-
                 <svg id="loadingIcon" class="w-4 h-4 animate-spin hidden" fill="none" viewBox="0 0 24 24">
                     <circle class="opacity-25" cx="12" cy="12" r="10" stroke="white" stroke-width="4"></circle>
                     <path class="opacity-75" fill="white" d="M4 12a8 8 0 018-8v8H4z"></path>
                 </svg>
-
             </button>
-
         </div>
-
     </form>
-
 </div>
 
-
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
-document.addEventListener('DOMContentLoaded', function () {
-    const form = document.getElementById('formAlamat');
-    const btn = document.getElementById('btnSubmit');
-    const text = document.getElementById('btnText');
-    const loading = document.getElementById('loadingIcon');
+$(document).ready(function() {
+    // LOAD PROVINSI (pake proxy Laravel)
+    $.ajax({
+        url: '/api/wilayah/provinces',
+        type: 'GET',
+        dataType: 'json',
+        success: function(response) {
+            $('#provinsi').empty();
+            $('#provinsi').append('<option value="">-- Pilih Provinsi --</option>');
+            $.each(response.data, function(key, provinsi) {
+                $('#provinsi').append('<option value="' + provinsi.name + '" data-code="' + provinsi.code + '">' + provinsi.name + '</option>');
+            });
+        },
+        error: function(xhr) {
+            console.log('Error:', xhr);
+            $('#provinsi').append('<option value="">Gagal load provinsi</option>');
+        }
+    });
 
-    function validateTextOnly(inputId, errorId, emptyMessage, numberMessage) {
-        const input = document.getElementById(inputId);
-        const error = document.getElementById(errorId);
+    // SAAT PROVINSI BERUBAH -> LOAD KABUPATEN
+    $('#provinsi').change(function() {
+        var selectedOption = $(this).find('option:selected');
+        var provinsiName = selectedOption.val();
+        var provinsiCode = selectedOption.data('code');
 
-        input.addEventListener('input', function () {
-            if (/[0-9]/.test(input.value)) {
-                input.value = '';
-                error.innerText = numberMessage;
-                error.classList.remove('hidden');
-                return;
-            }
+        // Simpan kode provinsi ke hidden field
+        $('#provinsi_kode').val(provinsiCode);
 
-            if (input.value.trim() === '') {
-                error.innerText = emptyMessage;
-                error.classList.remove('hidden');
-                return;
-            }
+        if (provinsiCode) {
+            $('#kota').prop('disabled', false);
+            $('#kota').empty();
+            $('#kota').append('<option value="">Loading...</option>');
+            $('#kecamatan').prop('disabled', true);
+            $('#kecamatan').empty().append('<option value="">-- Pilih Kecamatan --</option>');
 
-            error.innerText = '';
-            error.classList.add('hidden');
-        });
-    }
+            // Reset hidden fields
+            $('#kota_kode').val('');
+            $('#kecamatan_kode').val('');
 
-    validateTextOnly('provinsi', 'errorProv', 'Provinsi wajib diisi', 'Provinsi harus berupa huruf');
-    validateTextOnly('kota', 'errorKota', 'Kota/Kabupaten wajib diisi', 'Kota/Kabupaten harus berupa huruf');
-    validateTextOnly('kecamatan', 'errorKecamatan', 'Kecamatan wajib diisi', 'Kecamatan harus berupa huruf');
+            $.ajax({
+                url: '/api/wilayah/regencies/' + provinsiCode,
+                type: 'GET',
+                dataType: 'json',
+                success: function(response) {
+                    $('#kota').empty();
+                    $('#kota').append('<option value="">-- Pilih Kabupaten/Kota --</option>');
+                    $.each(response.data, function(key, kota) {
+                        $('#kota').append('<option value="' + kota.name + '" data-code="' + kota.code + '">' + kota.name + '</option>');
+                    });
+                },
+                error: function(xhr) {
+                    console.log('Error:', xhr);
+                    $('#kota').empty();
+                    $('#kota').append('<option value="">Gagal load kabupaten</option>');
+                }
+            });
+        } else {
+            $('#kota').prop('disabled', true);
+            $('#kecamatan').prop('disabled', true);
+            $('#kota').empty().append('<option value="">-- Pilih Kabupaten/Kota --</option>');
+            $('#kecamatan').empty().append('<option value="">-- Pilih Kecamatan --</option>');
+        }
+    });
 
-    form.addEventListener('submit', function (e) {
-        let valid = true;
+    // SAAT KOTA BERUBAH -> LOAD KECAMATAN
+    $('#kota').change(function() {
+        var selectedOption = $(this).find('option:selected');
+        var kotaName = selectedOption.val();
+        var kotaCode = selectedOption.data('code');
 
-        const fields = [
-            ['provinsi', 'errorProv', 'Provinsi wajib diisi'],
-            ['kota', 'errorKota', 'Kota/Kabupaten wajib diisi'],
-            ['kecamatan', 'errorKecamatan', 'Kecamatan wajib diisi'],
-        ];
+        // Simpan kode kota ke hidden field
+        $('#kota_kode').val(kotaCode);
 
-        fields.forEach(([inputId, errorId, message]) => {
-            const input = document.getElementById(inputId);
-            const error = document.getElementById(errorId);
+        if (kotaCode && kotaCode !== '') {
+            $('#kecamatan').prop('disabled', false);
+            $('#kecamatan').empty();
+            $('#kecamatan').append('<option value="">Loading...</option>');
 
-            if (input.value.trim() === '') {
-                error.innerText = message;
-                error.classList.remove('hidden');
-                input.value = '';
-                valid = false;
-            }
+            // Reset hidden field kecamatan
+            $('#kecamatan_kode').val('');
 
-            if (/[0-9]/.test(input.value)) {
-                error.innerText = 'Harap isi dengan huruf';
-                error.classList.remove('hidden');
-                input.value = '';
-                valid = false;
-            }
-        });
+            $.ajax({
+                url: '/api/wilayah/districts/' + kotaCode,
+                type: 'GET',
+                dataType: 'json',
+                success: function(response) {
+                    $('#kecamatan').empty();
+                    $('#kecamatan').append('<option value="">-- Pilih Kecamatan --</option>');
+                    $.each(response.data, function(key, kecamatan) {
+                        $('#kecamatan').append('<option value="' + kecamatan.name + '" data-code="' + kecamatan.code + '">' + kecamatan.name + '</option>');
+                    });
+                },
+                error: function(xhr) {
+                    console.log('Error:', xhr);
+                    $('#kecamatan').empty();
+                    $('#kecamatan').append('<option value="">Gagal load kecamatan</option>');
+                }
+            });
+        } else {
+            $('#kecamatan').prop('disabled', true);
+            $('#kecamatan').empty().append('<option value="">-- Pilih Kecamatan --</option>');
+        }
+    });
 
-        if (!valid) {
+    // SAAT KECAMATAN BERUBAH -> SIMPAN KODE KE HIDDEN FIELD
+    $('#kecamatan').change(function() {
+        var selectedOption = $(this).find('option:selected');
+        var kecamatanCode = selectedOption.data('code');
+        $('#kecamatan_kode').val(kecamatanCode);
+    });
+
+    // VALIDASI SEBELUM SUBMIT
+    $('#formAlamat').submit(function(e) {
+        var provinsi = $('#provinsi').val();
+        var kota = $('#kota').val();
+        var kecamatan = $('#kecamatan').val();
+        var kecamatanKode = $('#kecamatan_kode').val();
+
+        if (!provinsi || !kota || !kecamatan) {
             e.preventDefault();
-            return;
+            alert('Harap lengkapi semua data wilayah!');
+            return false;
         }
 
-        btn.disabled = true;
-        text.innerText = "Menyimpan...";
-        loading.classList.remove('hidden');
+        if (!kecamatanKode) {
+            e.preventDefault();
+            alert('Data wilayah tidak valid, silakan pilih ulang!');
+            return false;
+        }
+
+        // Animasi loading
+        $('#btnSubmit').prop('disabled', true);
+        $('#btnText').text('Menyimpan...');
+        $('#loadingIcon').removeClass('hidden');
     });
 });
 </script>

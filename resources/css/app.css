@@ -31,55 +31,19 @@
     font-family: 'DM Sans', sans-serif;
 }
 
-/* ===== Animations ===== */
-@keyframes fadeInUp {
-    from {
-        opacity: 0;
-        transform: translateY(30px);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
+@utility backdrop-blur-md {
+    backdrop-filter: blur(12px);
 }
 
-@keyframes fallHamster {
-    0% {
-        transform: translateY(-20vh) rotate(0deg);
-        opacity: 0;
-    }
-    10% {
-        opacity: 0.8;
-    }
-    90% {
-        opacity: 0.8;
-    }
-    100% {
-        transform: translateY(120vh) rotate(360deg);
-        opacity: 0;
-    }
-}
-
-.animate-fade-up {
-    animation: fadeInUp 0.6s ease-out forwards;
-}
-
-.delay-100 {
-    animation-delay: 0.1s;
-}
-
-.delay-200 {
-    animation-delay: 0.2s;
-}
-
-.delay-300 {
-    animation-delay: 0.3s;
-}
-
-/* ===== Login Panel Styles ===== */
-.login-panel {
-    background-color: rgba(255, 255, 255, 0.8);
+@utility backdrop-blur-sm {
     backdrop-filter: blur(4px);
+}
+/* ===== LOGIN PAGE STYLES ===== */
+
+/* Login Panel - Background blur + card effect */
+.login-panel {
+    background-color: rgba(255, 255, 255, 0.85);
+    backdrop-filter: blur(8px);
     border-radius: 1.5rem;
     box-shadow: 0 20px 25px -5px rgba(212, 165, 116, 0.2), 0 8px 10px -6px rgba(212, 165, 116, 0.1);
     border: 1px solid rgba(255, 255, 255, 0.6);
@@ -87,7 +51,7 @@
     transition: all 0.3s ease;
 }
 
-@media (min-width: 1024px) {
+@media (min-width: 768px) {
     .login-panel {
         padding: 2.5rem;
     }
@@ -98,7 +62,7 @@
     box-shadow: 0 25px 30px -12px rgba(212, 165, 116, 0.3);
 }
 
-/* ===== Welcome Back Badge ===== */
+/* Welcome Back Badge */
 .welcome-back-badge {
     display: inline-block;
     padding: 0.25rem 1rem;
@@ -109,7 +73,22 @@
     box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
 }
 
-/* ===== Google Button ===== */
+/* Terms Link */
+.terms-link {
+    color: var(--color-amber-light);
+    font-weight: 500;
+    text-decoration: underline;
+    text-underline-offset: 2px;
+    transition: all 0.2s ease;
+    display: inline-block;
+}
+
+.terms-link:hover {
+    color: var(--color-amber-dark);
+    transform: scale(1.05);
+}
+
+/* Google Button (pastikan pointer events jalan) */
 .google-btn {
     position: relative;
     width: 100%;
@@ -126,6 +105,8 @@
     font-weight: 600;
     color: var(--color-primary);
     cursor: pointer;
+    z-index: 9999;
+    pointer-events: auto;
 }
 
 .google-btn:hover {
@@ -138,84 +119,26 @@
     transform: scale(0.98);
 }
 
-/* ===== Terms Link ===== */
-.terms-link {
-    color: var(--color-amber-light);
-    font-weight: 500;
-    text-decoration: underline;
-    text-underline-offset: 2px;
-    transition: all 0.2s ease;
-    display: inline-block;
+/* Container untuk login page biar full height */
+.login-container {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 1.5rem;
 }
 
-.terms-link:hover {
-    color: var(--color-amber-dark);
-    transform: scale(1.05);
+/* ===== Animations ===== */
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
 }
-
-/* ===== Hujan Hamster ===== */
-.hamster-rain-item {
-    position: fixed;
-    top: -50px;
-    font-size: 2rem;
-    pointer-events: none;
-    z-index: 9999;
-    animation: fallHamster linear infinite;
-    opacity: 0;
-}
-
-/* 🔥 TAMBAHAN BARU — INI YANG FIX */
-#hamster-rain-container {
-    position: fixed;
-    inset: 0;
-    pointer-events: none; /* 🔥 INI KUNCI */
-    z-index: 0;
-}
-
-/* ===== Utility tambahan ===== */
-body {
-    font-family: 'DM Sans', sans-serif;
-}
-
-/* ====LANDING PAGE==== */
-/*
-/* Hamster Card */
-.hamster-card {
-    background: white;
-    border-radius: 1.5rem;
-    overflow: hidden;
-    box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05);
-    transition: all 0.3s ease;
-    border: 1px solid rgba(212, 165, 116, 0.2);
-}
-
-.hamster-card:hover {
-    transform: translateY(-8px);
-    box-shadow: 0 20px 30px -12px rgba(212, 165, 116, 0.3);
-}
-
- /* Buy Button */
-.buy-btn {
-    background: linear-gradient(135deg, var(--color-amber-light), var(--color-amber-dark));
-    color: white;
-    font-weight: 600;
-    padding: 0.75rem 1.5rem;
-    border-radius: 9999px;
-    transition: all 0.3s ease;
-    cursor: pointer;
-    border: none;
-}
-
-.buy-btn:hover {
-    transform: scale(1.05);
-    box-shadow: 0 10px 20px -5px rgba(184, 149, 106, 0.4);
-}
-
-.buy-btn:active {
-    transform: scale(0.98);
-}
-
-/* ===== ANIMASI EKSTRA UNTUK LANDING PAGE ===== */
 
 @keyframes bounce-slow {
     0%, 100% { transform: translateY(0); }
@@ -232,6 +155,33 @@ body {
     50% { transform: translateY(-20px) rotate(5deg); }
 }
 
+@keyframes slideUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes gentleShake {
+    0%, 100% { transform: translateX(0); }
+    25% { transform: translateX(-2px) translateY(-1px); }
+    75% { transform: translateX(2px) translateY(1px); }
+}
+
+@keyframes titleGlow {
+    0%, 100% { text-shadow: 0 0 0px rgba(212,165,116,0); }
+    50% { text-shadow: 0 0 8px rgba(212,165,116,0.3); }
+}
+
+/* ===== Animation Classes ===== */
+.animate-fade-up {
+    animation: fadeInUp 0.6s ease-out forwards;
+}
+
 .animate-bounce-slow {
     animation: bounce-slow 3s ease-in-out infinite;
 }
@@ -244,63 +194,29 @@ body {
     animation: float 5s ease-in-out infinite;
 }
 
-.delay-100 { animation-delay: 0.1s; }
-.delay-200 { animation-delay: 0.2s; }
-.delay-300 { animation-delay: 0.3s; }
-
-/* Hover effect tambahan */
-.hamster-card {
-    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-}
-
-.hamster-card:hover {
-    transform: translateY(-12px) scale(1.02);
-}
-
-/* ===== HERO TEXT ANIMASI GERAK ===== */
-.hero-highlight {
-    display: inline-block;
-    transition: all 0.3s ease;
-    animation: gentleShake 4s ease-in-out infinite;
-}
-
-@keyframes gentleShake {
-    0%, 100% { transform: translateX(0); }
-    25% { transform: translateX(-2px) translateY(-1px); }
-    75% { transform: translateX(2px) translateY(1px); }
-}
-
-.hero-title {
-    animation: titleGlow 3s ease-in-out infinite;
-}
-
-@keyframes titleGlow {
-    0%, 100% { text-shadow: 0 0 0px rgba(212,165,116,0); }
-    50% { text-shadow: 0 0 8px rgba(212,165,116,0.3); }
-}
-
 .animate-slide-up {
     animation: slideUp 0.6s ease-out forwards;
     opacity: 0;
     transform: translateY(20px);
 }
 
-@keyframes slideUp {
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
-}
-
+/* ===== Delay Utilities ===== */
+.delay-100 { animation-delay: 0.1s; }
 .delay-200 { animation-delay: 0.2s; }
 .delay-300 { animation-delay: 0.3s; }
 
-/* Navbar transition makin halus */
-#main-nav {
-    transition: background 0.3s ease, backdrop-filter 0.3s ease;
+/* ===== Hero Text ===== */
+.hero-highlight {
+    display: inline-block;
+    transition: all 0.3s ease;
+    animation: gentleShake 4s ease-in-out infinite;
 }
 
-/* ===== NAVBAR DENGAN GARIS BAWAH SAAT HOVER ===== */
+.hero-title {
+    animation: titleGlow 3s ease-in-out infinite;
+}
+
+/* ===== Navbar Styles ===== */
 .nav-item-wrapper {
     position: relative;
     transition: all 0.3s ease;
@@ -316,7 +232,6 @@ body {
     z-index: 2;
 }
 
-/* Garis bawah animasi */
 .nav-item-wrapper::after {
     content: '';
     position: absolute;
@@ -330,44 +245,166 @@ body {
     transform: translateX(-50%);
 }
 
-/* Saat hover, garis bawah muncul dan melebar */
 .nav-item-wrapper:hover::after {
     width: 80%;
 }
 
 .nav-item-wrapper:hover .nav-link-custom {
     color: white;
-} */
+}
 
+/* ===== Login Button ===== */
+.login-btn {
+    background: linear-gradient(135deg, var(--color-amber-light), var(--color-amber-dark));
+    color: white !important;
+    border-radius: 9999px;
+    padding: 0.5rem 1.5rem;
+    font-weight: 600;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+}
+
+.login-btn:hover {
+    transform: scale(1.05);
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.15);
+}
+
+/* ===== Hamster Card ===== */
+.hamster-card {
+    background: white;
+    border-radius: 1.5rem;
+    overflow: hidden;
+    box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05);
+    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    border: 1px solid rgba(212, 165, 116, 0.2);
+}
+
+.hamster-card:hover {
+    transform: translateY(-12px) scale(1.02);
+    box-shadow: 0 20px 30px -12px rgba(212, 165, 116, 0.3);
+}
+
+/* ===== Buy Button ===== */
+.buy-btn {
+    background: linear-gradient(135deg, var(--color-amber-light), var(--color-amber-dark));
+    color: white;
+    font-weight: 600;
+    padding: 0.75rem 1.5rem;
+    border-radius: 9999px;
+    transition: all 0.3s ease;
+    cursor: pointer;
+    border: none;
+    width: 100%;
+}
+
+.buy-btn:hover {
+    transform: scale(1.05);
+    box-shadow: 0 10px 20px -5px rgba(184, 149, 106, 0.4);
+}
+
+.buy-btn:active {
+    transform: scale(0.98);
+}
+
+/* ===== Google Button (untuk login page nanti) ===== */
 .google-btn {
     position: relative;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.75rem;
+    background-color: white;
+    padding: 0.875rem 1rem;
+    border-radius: 0.75rem;
+    border: 1px solid var(--color-cream);
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+    transition: all 0.3s ease;
+    font-weight: 600;
+    color: var(--color-primary);
+    cursor: pointer;
     z-index: 9999;
     pointer-events: auto;
 }
 
-@keyframes fadeIn {
-    from { opacity: 0; transform: translateY(10px);}
-    to { opacity: 1; transform: translateY(0);}
+.google-btn:hover {
+    transform: scale(1.02);
+    background-color: var(--color-bg-start);
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
 }
 
-.animate-fade-in {
-    animation: fadeIn 0.5s ease forwards;
+.google-btn:active {
+    transform: scale(0.98);
 }
 
-@keyframes fadeIn {
-    from {opacity:0; transform:translateY(10px);}
-    to {opacity:1; transform:translateY(0);}
+/* ===== Body Default ===== */
+body {
+    font-family: 'DM Sans', sans-serif;
 }
 
-@keyframes slideUp {
-    from {opacity:0; transform:translateY(30px);}
-    to {opacity:1; transform:translateY(0);}
+/* ===== Navbar Transition ===== */
+#main-nav {
+    transition: background 0.3s ease, backdrop-filter 0.3s ease;
 }
 
-.animate-fade-in {
-    animation: fadeIn 0.5s ease forwards;
+/* ===== ADDITIONAL GLASSMORPHISM EFFECTS ===== */
+
+/* Animated gradient border */
+@keyframes borderFlow {
+    0%, 100% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
 }
 
-.animate-slide-up {
-    animation: slideUp 0.6s ease forwards;
+.hover\:shadow-glow:hover {
+    box-shadow: 0 0 25px rgba(212, 165, 116, 0.3);
+}
+
+/* Floating hamster animations extended */
+@keyframes floatSlow {
+    0%, 100% { transform: translateY(0px) rotate(0deg); }
+    50% { transform: translateY(-15px) rotate(3deg); }
+}
+
+.animate-float-slow {
+    animation: floatSlow 8s ease-in-out infinite;
+}
+
+.animate-float-delay {
+    animation: floatSlow 6s ease-in-out infinite;
+    animation-delay: 1s;
+}
+
+/* Stats number hover effect */
+.stat-number {
+    transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.stat-number:hover {
+    transform: scale(1.1);
+    color: #D4A574;
+}
+
+/* KATALOG
+
+/* Admin Area
+/* Line clamp utilities */
+/* ===== LINE CLAMP UTILITIES ===== */
+@utility line-clamp-1 {
+    display: -webkit-box;
+    -webkit-line-clamp: 1;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+@utility line-clamp-2 {
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+@utility line-clamp-3 {
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
 }

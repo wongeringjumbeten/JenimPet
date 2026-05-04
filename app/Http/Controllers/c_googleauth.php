@@ -49,7 +49,6 @@ class c_googleauth extends Controller
             'avatar' => $googleUser->getAvatar(),
         ]);
 
-        // 🔥 INI YANG HILANG
         Auth::login($user);
         $request->session()->regenerate();
 
@@ -58,7 +57,7 @@ class c_googleauth extends Controller
             return redirect('/admin/dashboard');
         }
 
-        return redirect('/dashboard');
+        return redirect('/profile');
 
     } catch (\Exception $e) {
         return redirect('/login')->with('error', 'Login gagal');

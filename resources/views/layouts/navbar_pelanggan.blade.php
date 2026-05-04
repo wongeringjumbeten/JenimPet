@@ -15,7 +15,7 @@ bg-white/70 backdrop-blur-xl shadow-md sticky top-0 z-[60]">
     <div class="hidden md:flex gap-8 text-[#6B5847] font-medium">
 
         <a href="{{ route('katalog.pelanggan') }}"
-        class="hover:text-[#D4A574]">
+        class="{{ request()->routeIs('katalog.pelanggan') ? 'text-[#D4A574] font-semibold' : 'hover:text-[#D4A574]' }}">
         Katalog
         </a>
 
@@ -35,7 +35,7 @@ bg-white/70 backdrop-blur-xl shadow-md sticky top-0 z-[60]">
         </a>
 
         <a href="{{ route('profile') }}"
-        class="hover:text-[#D4A574]">
+        class="{{ request()->routeIs('profile') || request()->routeIs('profile.edit.*') ? 'text-[#D4A574] font-semibold' : 'hover:text-[#D4A574]' }}">
         Profil
         </a>
 
@@ -48,18 +48,7 @@ bg-white/70 backdrop-blur-xl shadow-md sticky top-0 z-[60]">
         <img src="{{ auth()->user()->avatar ?? 'https://i.pravatar.cc/100' }}"
             class="w-9 h-9 rounded-full border-2 border-[#D4A574] shadow">
 
-        {{-- LOGOUT DESKTOP --}}
-        <form action="{{ route('logout') }}" method="POST" class="hidden md:block">
-            @csrf
-            <button
-            class="px-4 py-2 rounded-xl text-sm font-semibold
-            bg-gradient-to-r from-red-500 to-red-600 text-white
-            hover:scale-105 transition">
-            Logout
-            </button>
-        </form>
-
-        {{-- HAMBURGER --}}
+        {{-- HAMBURGER (LOGOUT SUDAH DIHAPUS) --}}
         <button id="menuBtn"
         class="md:hidden flex flex-col gap-1.5">
             <span class="w-6 h-[2px] bg-[#2C1810]"></span>
@@ -71,24 +60,22 @@ bg-white/70 backdrop-blur-xl shadow-md sticky top-0 z-[60]">
 
 </nav>
 
-{{-- MOBILE MENU --}}
+{{-- MOBILE MENU (TANPA LOGOUT) --}}
 <div id="mobileMenu"
 class="fixed top-0 right-0 w-64 h-full bg-white shadow-2xl
 transform translate-x-full transition duration-300 z-[999] p-6 flex flex-col gap-6">
 
-    <a href="{{ route('katalog.pelanggan') }}">Katalog</a>
+    <a href="{{ route('katalog.pelanggan') }}"
+    class="{{ request()->routeIs('katalog.pelanggan') ? 'text-[#D4A574] font-semibold' : '' }}">
+    Katalog
+    </a>
     <a href="#">Pesanan</a>
     <a href="#">Keranjang</a>
     <a href="#">Review</a>
-    <a href="{{ route('profile')}}">Profil</a>
-
-    <form action="{{ route('logout') }}" method="POST">
-        @csrf
-        <button class="mt-4 w-full py-2 rounded-xl
-        bg-gradient-to-r from-red-500 to-red-600 text-white">
-            Logout
-        </button>
-    </form>
+    <a href="{{ route('profile') }}"
+    class="{{ request()->routeIs('profile') || request()->routeIs('profile.edit.*') ? 'text-[#D4A574] font-semibold' : '' }}">
+    Profil
+    </a>
 
 </div>
 
@@ -97,8 +84,7 @@ transform translate-x-full transition duration-300 z-[999] p-6 flex flex-col gap
 class="fixed inset-0 bg-black/30 backdrop-blur-sm opacity-0 pointer-events-none transition duration-300 z-[998]">
 </div>
 
-
-{{-- VERSI DENGAN ANIMASI --}}
+{{-- SCRIPT UNTUK MOBILE MENU --}}
 <script>
 document.addEventListener('DOMContentLoaded', () => {
 

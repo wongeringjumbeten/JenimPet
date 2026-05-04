@@ -12,42 +12,45 @@ bg-white/60 backdrop-blur-xl shadow-md sticky top-0 z-[60]">
     </div>
 
     {{-- MENU DESKTOP --}}
-    <div class="hidden md:flex gap-8 text-[#6B5847] font-medium">
+<div class="hidden md:flex gap-8 text-[#6B5847] font-medium">
 
-        <a href="{{ route('admin.dashboard') }}"
-           class="{{ request()->routeIs('admin.dashboard') ? 'text-[#D4A574] font-semibold' : 'hover:text-[#D4A574]' }}">
-           Dashboard
-        </a>
+    <a href="{{ route('admin.dashboard') }}"
+    class="{{ request()->routeIs('admin.dashboard') ? 'text-[#D4A574] font-semibold' : 'hover:text-[#D4A574]' }}">
+    Dashboard
+    </a>
 
-        <a href="{{ route('admin.katalog') }}"
-           class="{{ request()->routeIs('admin.katalog*') ? 'text-[#D4A574] font-semibold' : 'hover:text-[#D4A574]' }}">
-           Katalog
-        </a>
+    <a href="{{ route('admin.katalog') }}"
+    class="{{ request()->routeIs('admin.katalog*') ? 'text-[#D4A574] font-semibold' : 'hover:text-[#D4A574]' }}">
+    Katalog
+    </a>
 
-        <a href="#"
-           class="hover:text-[#D4A574]">
-           Pesanan
-        </a>
+    <a href="#"
+    class="hover:text-[#D4A574]">
+    Pesanan
+    </a>
 
-        <a href="#"
-           class="hover:text-[#D4A574]">
-           Laporan
-        </a>
+    <a href="#"
+    class="hover:text-[#D4A574]">
+    Laporan
+    </a>
 
-        <a href="{{ route('admin.pelanggan') }}"
-           class="{{ request()->routeIs('admin.pelanggan*') ? 'text-[#D4A574] font-semibold' : 'hover:text-[#D4A574]' }}">
-           Pelanggan
-        </a>
+    <a href="{{ route('admin.pelanggan') }}"
+    class="{{ request()->routeIs('admin.pelanggan*') ? 'text-[#D4A574] font-semibold' : 'hover:text-[#D4A574]' }}">
+    Pelanggan
+    </a>
 
-        <a href="#"
-           class="hover:text-[#D4A574]">
-           Review
-        </a>
+    <a href="#"
+    class="hover:text-[#D4A574]">
+    Review
+    </a>
 
-        <a href="{{ route('admin.profile') }}"
-           class="hover:text-[#D4A574]">
-           Profil
-        </a>
+    {{-- INI YANG DIUPDATE --}}
+    <a href="{{ route('admin.profile') }}"
+    class="{{ request()->routeIs('admin.profile') ? 'text-[#D4A574] font-semibold' : 'hover:text-[#D4A574]' }}">
+    Profil
+    </a>
+
+</div>
 
     </div>
 
@@ -56,18 +59,7 @@ bg-white/60 backdrop-blur-xl shadow-md sticky top-0 z-[60]">
 
         {{-- AVATAR --}}
         <img src="{{ auth()->user()->avatar ?? 'https://i.pravatar.cc/100' }}"
-             class="w-9 h-9 rounded-full border-2 border-[#D4A574] shadow">
-
-        {{-- LOGOUT DESKTOP --}}
-        <form action="{{ route('logout') }}" method="POST" class="hidden md:block">
-            @csrf
-            <button
-                class="px-4 py-2 rounded-xl text-sm font-semibold
-                bg-gradient-to-r from-red-500 to-red-600 text-white
-                hover:scale-105 transition">
-                Logout
-            </button>
-        </form>
+            class="w-9 h-9 rounded-full border-2 border-[#D4A574] shadow">
 
         {{-- HAMBURGER MOBILE --}}
         <button id="menuBtn"
@@ -94,13 +86,6 @@ transform translate-x-full transition duration-300 z-50 p-6 flex flex-col gap-6"
     <a href="#">Review</a>
     <a href="{{ route('admin.profile') }}">Profil</a>
 
-    <form action="{{ route('logout') }}" method="POST">
-        @csrf
-        <button class="mt-4 w-full py-2 rounded-xl
-        bg-gradient-to-r from-red-500 to-red-600 text-white">
-            Logout
-        </button>
-    </form>
 
 </div>
 

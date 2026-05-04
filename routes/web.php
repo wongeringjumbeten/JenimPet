@@ -6,6 +6,7 @@ use App\Http\Controllers\c_profil;
 use App\Http\Controllers\c_pelanggan;
 use App\Http\Controllers\c_produk;
 use App\Http\Controllers\c_dashboard;
+use App\Http\Controllers\c_apiwilayah;
 
 Route::get('/test-google', function () {
     return redirect('/auth/google');
@@ -55,6 +56,12 @@ Route::middleware(['auth'])->group(function () {
 
     Route::get('/katalog', [c_produk::class, 'katalogPelanggan'])
         ->name('katalog.pelanggan');
+
+
+// API Wilayah (Proxy)
+Route::get('/api/wilayah/provinces', [c_apiwilayah::class, 'getProvinces']);
+Route::get('/api/wilayah/regencies/{provinceCode}', [c_apiwilayah::class, 'getRegencies']);
+Route::get('/api/wilayah/districts/{regencyCode}', [c_apiwilayah::class, 'getDistricts']);
 });
 //AREA ADMIN
 Route::middleware(['auth', 'admin'])->group(function () {
@@ -97,5 +104,8 @@ Route::middleware(['auth', 'admin'])->group(function () {
 
     Route::delete('/admin/katalog/{id}', [c_produk::class, 'destroy'])
         ->name('admin.katalog.delete');
+
+    Route::patch('/admin/katalog/{id}/toggle-show', [c_produk::class, 'toggleShow'])
+    ->name('admin.katalog.toggleShow');
 
 });

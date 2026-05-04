@@ -14,10 +14,36 @@
 
 <section class="px-6 md:px-16 py-10">
 
-    {{-- TITLE --}}
-    <h1 class="text-4xl font-bold text-[#2C1810] mb-8">
-        Profil Saya
-    </h1>
+    {{-- HEADER DENGAN LOGOUT --}}
+    <div class="flex justify-between items-center mb-8">
+        <h1 class="text-4xl font-bold text-[#2C1810]">
+            Profil Saya
+        </h1>
+
+        {{-- TOMBOL LOGOUT --}}
+        <form action="{{ route('logout') }}" method="POST" id="logoutForm">
+            @csrf
+            <button type="button" id="logoutBtn"
+                class="group relative px-6 py-3 rounded-2xl font-semibold
+                bg-gradient-to-r from-red-500 to-red-600 text-white
+                shadow-lg hover:shadow-red-500/30 hover:scale-105
+                transition-all duration-300 overflow-hidden">
+
+                {{-- Efek hover --}}
+                <span class="absolute inset-0 bg-white/20 translate-y-full group-hover:translate-y-0 transition-transform duration-300"></span>
+
+                {{-- Konten --}}
+                <span class="relative flex items-center gap-2">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1">
+                        </path>
+                    </svg>
+                    Logout
+                </span>
+            </button>
+        </form>
+    </div>
 
     {{-- CARD PROFIL --}}
     <div class="bg-white/70 backdrop-blur-xl rounded-3xl shadow-xl p-6 flex items-center justify-between mb-6">
@@ -55,7 +81,7 @@
 
         </div>
 
-        {{-- EDIT --}}
+        {{-- EDIT NAMA --}}
         <a href="{{ route('profile.edit.nama') }}"
         class="bg-[#E8D5C4] p-3 rounded-full hover:scale-110 transition inline-block">
         <img src="{{ asset('icons/EditIcon.svg') }}" class="w-4">
@@ -133,6 +159,21 @@
     </div>
 
 </section>
+
+{{-- SCRIPT KONFIRMASI LOGOUT --}}
+<script>
+    document.getElementById('logoutBtn')?.addEventListener('click', function(e) {
+        this.style.transform = 'scale(0.98)';
+        setTimeout(() => {
+            this.style.transform = '';
+        }, 150);
+
+        const confirmed = confirm('Apakah Anda yakin ingin logout?');
+        if (confirmed) {
+            document.getElementById('logoutForm').submit();
+        }
+    });
+</script>
 
 </body>
 </html>

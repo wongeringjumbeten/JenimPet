@@ -76,32 +76,39 @@ class c_profil extends Controller
     ]);
     }
 
-    public function updateAlamat(Request $request)
-    {
+    // Di c_profil.php, replace method updateAlamat yang lama
+
+public function updateAlamat(Request $request)
+{
     $request->validate([
-        'provinsi' => 'required',
-        'kota' => 'required',
-        'kecamatan' => 'required',
+        'kecamatan_kode' => 'required|string',  // kode dari API (contoh: "31.74.06")
+        'detail_alamat' => 'nullable|string|max:500',
+        'provinsi' => 'required|string',
+        'kota' => 'required|string',
+        'kecamatan' => 'required|string',
     ]);
 
-    $alamat = $request->provinsi . ', ' .
-            $request->kota . ', ' .
-            $request->kecamatan;
+    // Cari kecamatan berdasarkan KODE dari API
+    $kecamatan = m_kecamatan::where('kode', $request->kecamatan_kode)->first();
+
+    if (!$kecamatan) {
+        return back()->withErrors(['kecamatan' => 'Wilayah tidak ditemukan di database. Silakan coba lagi.']);
+    }
 
     $user = auth()->user();
-    $user->alamat = $alamat;
+
+    // Simpan ID kecamatan (auto-increment) ke tabel akun
+    $user->kecamatan_id = $kecamatan->id_kecamatan;
+    $user->detail_alamat = $request->detail_alamat;
+
+    // Backup string alamat (opsional)
+    $user->alamat = $request->provinsi . ', ' . $request->kota . ', ' . $request->kecamatan;
+
     $user->save();
 
     return redirect()->route('profile')
         ->with('success', 'Alamat berhasil diperbarui!');
-    }
-    public function editNama()
-    {
-    return view('v_formupdatenamapelanggan', [
-        'user' => auth()->user()
-    ]);
-    }
-
+}
     public function updateNama(Request $request)
     {
     $request->validate([

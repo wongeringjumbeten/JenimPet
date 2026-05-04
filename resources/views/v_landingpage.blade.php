@@ -19,15 +19,15 @@
         🐭
     </div>
 
-    {{-- NAVBAR BACKGROUND COKLAT DENGAN BULAT PADA SETIAP ELEMEN --}}
+    {{-- NAVBAR STATIS --}}
     <nav class="fixed top-0 left-0 w-full z-50 bg-primary shadow-lg" id="main-nav">
         <div class="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
-            {{-- Logo JenimPet TERANG --}}
+            {{-- Logo --}}
             <a href="/" class="font-playfair text-2xl font-bold text-white group relative z-10">
                 Jenim<span class="text-amber-light group-hover:text-amber-200 transition">Pet</span>
             </a>
 
-            {{-- DESKTOP NAVBAR DENGAN BACKGROUND BULAT --}}
+            {{-- DESKTOP NAVBAR --}}
             <div class="hidden md:flex gap-2 items-center relative z-10">
                 <!-- Katalog -->
                 <div class="nav-item-wrapper">
@@ -36,59 +36,19 @@
                     </a>
                 </div>
 
-                <!-- Review -->
+                <!-- Lokasi Toko -->
                 <div class="nav-item-wrapper">
-                    <a href="#review" class="nav-link-custom">
-                        Review
+                    <a href="#lokasi" class="nav-link-custom">
+                        Lokasi Toko
                     </a>
                 </div>
 
-                <!-- Pesanan -->
+                {{-- LOGIN SAJA (STATIS) --}}
                 <div class="nav-item-wrapper">
-                    <a href="#pesanan" class="nav-link-custom">
-                        Pesanan
+                    <a href="{{ route('login') }}" class="nav-link-custom login-btn">
+                        Login
                     </a>
                 </div>
-
-                <!-- Keranjang -->
-                <div class="nav-item-wrapper">
-                    <a href="#keranjang" class="nav-link-custom">
-                        Keranjang
-                    </a>
-                </div>
-
-                {{-- CEK LOGIN UNTUK DESKTOP --}}
-                @auth
-                    {{-- DASHBOARD --}}
-                    <div class="nav-item-wrapper">
-                        @if(trim(Auth::user()->is_admin) == '1')
-                            <a href="{{ route('admin.dashboard') }}" class="nav-link-custom">
-                                Dashboard Admin
-                            </a>
-                        @else
-                            <a href="{{ route('dashboard') }}" class="nav-link-custom">
-                                Dashboard
-                            </a>
-                        @endif
-                    </div>
-
-                    {{-- LOGOUT BUTTON --}}
-                    <div class="nav-item-wrapper">
-                        <form method="POST" action="{{ route('logout') }}" class="inline">
-                            @csrf
-                            <button type="submit" class="nav-link-custom">
-                                Logout
-                            </button>
-                        </form>
-                    </div>
-                @else
-                    {{-- LOGIN (TANPA HAMSTER) --}}
-                    <div class="nav-item-wrapper">
-                        <a href="{{ route('login') }}" class="nav-link-custom login-btn">
-                            Login
-                        </a>
-                    </div>
-                @endauth
             </div>
 
             {{-- MOBILE MENU BUTTON --}}
@@ -100,34 +60,10 @@
         {{-- MOBILE MENU --}}
         <div id="mobile-menu" class="hidden md:hidden bg-primary/95 backdrop-blur-md border-t border-amber-light/30 py-4 px-6 flex flex-col gap-4">
             <a href="#katalog" class="text-white/80 hover:text-white transition">Katalog</a>
-            <a href="#review" class="text-white/80 hover:text-white transition">Review</a>
-            <a href="#pesanan" class="text-white/80 hover:text-white transition">Pesanan</a>
-            <a href="#keranjang" class="text-white/80 hover:text-white transition">Keranjang</a>
-
-            @auth
-                {{-- DASHBOARD MOBILE --}}
-                @if(trim(Auth::user()->is_admin) == '1')
-                    <a href="{{ route('admin.dashboard') }}" class="px-5 py-2 bg-gradient-to-r from-amber-light to-amber-dark text-white rounded-full font-semibold text-center hover:shadow-lg transition">
-                        Dashboard Admin
-                    </a>
-                @else
-                    <a href="{{ route('dashboard') }}" class="px-5 py-2 bg-gradient-to-r from-amber-light to-amber-dark text-white rounded-full font-semibold text-center hover:shadow-lg transition">
-                        Dashboard
-                    </a>
-                @endif
-
-                {{-- LOGOUT MOBILE --}}
-                <form method="POST" action="{{ route('logout') }}">
-                    @csrf
-                    <button type="submit" class="w-full px-5 py-2 bg-red-500/80 hover:bg-red-600 text-white rounded-full font-semibold text-center transition">
-                        Logout
-                    </button>
-                </form>
-            @else
-                <a href="{{ route('login') }}" class="px-5 py-2 bg-gradient-to-r from-amber-light to-amber-dark text-white rounded-full font-semibold text-center hover:shadow-lg transition">
-                    Login
-                </a>
-            @endauth
+            <a href="#lokasi" class="text-white/80 hover:text-white transition">Lokasi Toko</a>
+            <a href="{{ route('login') }}" class="px-5 py-2 bg-gradient-to-r from-amber-light to-amber-dark text-white rounded-full font-semibold text-center hover:shadow-lg transition">
+                Login
+            </a>
         </div>
     </nav>
 
@@ -314,25 +250,8 @@
                 </div>
                 <div class="flex gap-6">
                     <a href="#katalog" class="text-white/80 hover:text-white hover:scale-110 transition inline-block">Katalog</a>
-                    <a href="#review" class="text-white/80 hover:text-white hover:scale-110 transition inline-block">Review</a>
-                    <a href="#pesanan" class="text-white/80 hover:text-white hover:scale-110 transition inline-block">Pesanan</a>
-
-                    @auth
-                        @if(trim(Auth::user()->is_admin) == '1')
-                            <a href="{{ route('admin.dashboard') }}" class="text-white/80 hover:text-white hover:scale-110 transition inline-block">Dashboard Admin</a>
-                        @else
-                            <a href="{{ route('dashboard') }}" class="text-white/80 hover:text-white hover:scale-110 transition inline-block">Dashboard</a>
-                        @endif
-
-                        <form method="POST" action="{{ route('logout') }}" class="inline">
-                            @csrf
-                            <button type="submit" class="text-white/80 hover:text-white hover:scale-110 transition inline-block">
-                                Logout
-                            </button>
-                        </form>
-                    @else
-                        <a href="{{ route('login') }}" class="text-white/80 hover:text-white hover:scale-110 transition inline-block">Login</a>
-                    @endauth
+                    <a href="#lokasi" class="text-white/80 hover:text-white hover:scale-110 transition inline-block">Lokasi Toko</a>
+                    <a href="{{ route('login') }}" class="text-white/80 hover:text-white hover:scale-110 transition inline-block">Login</a>
                 </div>
                 <div class="text-white/60 text-sm">
                     © 2026 JenimPet. 🐹 All rights reserved.

@@ -4,105 +4,113 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\m_produk;
-use Illuminate\Support\Facades\DB;
 
 class c_produk extends Controller
 {
-    // tampil katalog
+    // ==================== ADMIN ====================
+
     public function index()
     {
-        $produk = m_produk::where('is_deleted', '0')
-                    ->latest()
-                    ->get();
+        // Pisahkan produk yang tampil dan tidak tampil
+        $produkTampil = m_produk::where('is_deleted', '0')->orderBy('created_at', 'desc')->get();
+        $produkTidakTampil = m_produk::where('is_deleted', '1')->orderBy('created_at', 'desc')->get();
 
-        return view('v_katalogadmin', compact('produk'));
+        return view('v_katalogadmin', compact('produkTampil', 'produkTidakTampil'));
     }
 
-    // form tambah produk
     public function create()
     {
         return view('v_formtambahproduk');
     }
 
-    // simpan produk
     public function store(Request $request)
     {
+        // validasi dan store
         $request->validate([
-            'nama_produk' => 'required|max:30',
-            'deskripsi' => 'nullable',
-            'harga' => 'required|numeric',
-            'stok' => 'required|numeric',
-            'foto_produk' => 'required|image|mimes:jpg,jpeg,png|max:2048',
+            'nama_produk' => 'required|string|max:100',
+            'deskripsi' => 'nullable|string',
+            'harga' => 'required|numeric|min:0',
+            'stok' => 'required|integer|min:0',
+            'foto_produk' => 'required|image|mimes:jpeg,png,jpg|max:2048',
         ]);
 
-        // upload foto
-        $path = $request->file('foto_produk')->store('produk', 'public');
+        $fotoPath = $request->file('foto_produk')->store('produk', 'public');
 
-        // simpan ke database
         m_produk::create([
             'nama_produk' => $request->nama_produk,
             'deskripsi' => $request->deskripsi,
             'harga' => $request->harga,
             'stok' => $request->stok,
-            'foto_produk' => $path,
-            'is_deleted' => '0',
+            'foto_produk' => $fotoPath,
+            'is_deleted' => '0', // default aktif
         ]);
 
-        return redirect()->route('admin.katalog')
-            ->with('success', 'Produk berhasil ditambahkan');
+        return redirect()->route('admin.katalog')->with('success', 'Produk berhasil ditambahkan');
+    }
+
+
+    public function edit($id)
+    {
+        $produk = m_produk::findOrFail($id);
+        return view('v_formeditproduk', compact('produk'));
+    }
+
+    public function update(Request $request, $id)
+    {
+        $produk = m_produk::findOrFail($id);
+
+        $request->validate([
+            'nama_produk' => 'required|string|max:100',
+            'deskripsi' => 'nullable|string',
+            'harga' => 'required|numeric|min:0',
+            'stok' => 'required|integer|min:0',
+            'foto_produk' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
+        ]);
+
+        $data = [
+            'nama_produk' => $request->nama_produk,
+            'deskripsi' => $request->deskripsi,
+            'harga' => $request->harga,
+            'stok' => $request->stok,
+        ];
+
+        if ($request->hasFile('foto_produk')) {
+            $fotoPath = $request->file('foto_produk')->store('produk', 'public');
+            $data['foto_produk'] = $fotoPath;
+        }
+
+        $produk->update($data);
+
+        return redirect()->route('admin.katalog')->with('success', 'Produk berhasil diupdate');
     }
 
     public function destroy($id)
     {
-    DB::table('produk')
-        ->where('id_produk', $id)
-        ->update(['is_deleted' => '1']);
+        $produk = m_produk::findOrFail($id);
+        $produk->delete();
 
-    return redirect()->back()->with('success', 'Produk berhasil dihapus');
+        return redirect()->route('admin.katalog')->with('success', 'Produk berhasil dihapus');
     }
 
-    public function edit($id)
+    public function toggleShow($id)
     {
-    $produk = DB::table('produk')->where('id_produk', $id)->first();
+        $produk = m_produk::findOrFail($id);
 
-    return view('v_formeditproduk', compact('produk'));
-    }
-    public function update(Request $request, $id)
-{
-    $request->validate([
-        'nama_produk' => 'required|max:30',
-        'harga' => 'required|numeric',
-        'stok' => 'required|numeric',
-        'foto_produk' => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
-    ]);
+        // Toggle status (0 -> 1 atau 1 -> 0)
+        $produk->is_deleted = $produk->is_deleted == '1' ? '0' : '1';
+        $produk->save();
 
-    $data = [
-        'nama_produk' => $request->nama_produk,
-        'deskripsi' => $request->deskripsi,
-        'harga' => $request->harga,
-        'stok' => $request->stok,
-        'updated_at' => now()
-    ];
-
-    if ($request->hasFile('foto_produk')) {
-        $path = $request->file('foto_produk')->store('produk', 'public');
-        $data['foto_produk'] = $path;
+        return response()->json(['success' => true]);
     }
 
-    DB::table('produk')
-        ->where('id_produk', $id)
-        ->update($data);
+    // ==================== PELANGGAN ====================
 
-    return redirect()->route('admin.katalog')
-        ->with('success', 'Produk berhasil diupdate');
-    }
     public function katalogPelanggan()
     {
-    $produk = DB::table('produk')
-        ->where('is_deleted', '0')
-        ->latest()
-        ->get();
+        $produk = m_produk::where('is_deleted', '0')
+            ->orderBy('created_at', 'desc')
+            ->get();
 
-    return view('v_katalogpelanggan', compact('produk'));
+        return view('v_katalogpelanggan', compact('produk'));
     }
 }
