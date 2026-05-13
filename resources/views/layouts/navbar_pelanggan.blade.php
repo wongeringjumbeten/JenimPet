@@ -19,14 +19,23 @@ bg-white/70 backdrop-blur-xl shadow-md sticky top-0 z-[60]">
         Katalog
         </a>
 
-        <a href="#"
-        class="hover:text-[#D4A574]">
+        <a href="{{ route('pesanan.index') }}"
+        class="hover:text-[#D4A574] transition">
         Pesanan
         </a>
 
-        <a href="#"
-        class="hover:text-[#D4A574]">
+        @php
+            $cartCount = App\Http\Controllers\c_keranjang::getCartCount();
+        @endphp
+
+        <a href="{{ route('keranjang.index') }}"
+        class="{{ request()->routeIs('keranjang.index') ? 'text-[#D4A574] font-semibold' : 'hover:text-[#D4A574]' }} relative">
         Keranjang
+        @if($cartCount > 0)
+            <span class="absolute -top-2 -right-4 bg-red-500 text-white text-xs rounded-full px-1.5 py-0.5 min-w-[18px] text-center">
+                {{ $cartCount }}
+            </span>
+        @endif
         </a>
 
         <a href="#"
@@ -48,7 +57,7 @@ bg-white/70 backdrop-blur-xl shadow-md sticky top-0 z-[60]">
         <img src="{{ auth()->user()->avatar ?? 'https://i.pravatar.cc/100' }}"
             class="w-9 h-9 rounded-full border-2 border-[#D4A574] shadow">
 
-        {{-- HAMBURGER (LOGOUT SUDAH DIHAPUS) --}}
+        {{-- HAMBURGER --}}
         <button id="menuBtn"
         class="md:hidden flex flex-col gap-1.5">
             <span class="w-6 h-[2px] bg-[#2C1810]"></span>
@@ -60,7 +69,7 @@ bg-white/70 backdrop-blur-xl shadow-md sticky top-0 z-[60]">
 
 </nav>
 
-{{-- MOBILE MENU (TANPA LOGOUT) --}}
+{{-- MOBILE MENU --}}
 <div id="mobileMenu"
 class="fixed top-0 right-0 w-64 h-full bg-white shadow-2xl
 transform translate-x-full transition duration-300 z-[999] p-6 flex flex-col gap-6">
@@ -69,13 +78,40 @@ transform translate-x-full transition duration-300 z-[999] p-6 flex flex-col gap
     class="{{ request()->routeIs('katalog.pelanggan') ? 'text-[#D4A574] font-semibold' : '' }}">
     Katalog
     </a>
-    <a href="#">Pesanan</a>
-    <a href="#">Keranjang</a>
+
+    <a href="{{ route('pesanan.index') }}"
+    class="hover:text-[#D4A574] transition">
+    Pesanan
+    </a>
+
+    @php
+        $cartCountMobile = App\Http\Controllers\c_keranjang::getCartCount();
+    @endphp
+
+    <a href="{{ route('keranjang.index') }}"
+    class="{{ request()->routeIs('keranjang.index') ? 'text-[#D4A574] font-semibold' : '' }} flex justify-between items-center">
+        Keranjang
+        @if($cartCountMobile > 0)
+            <span class="bg-red-500 text-white text-xs rounded-full px-2 py-0.5">
+                {{ $cartCountMobile }}
+            </span>
+        @endif
+    </a>
+
     <a href="#">Review</a>
+
     <a href="{{ route('profile') }}"
     class="{{ request()->routeIs('profile') || request()->routeIs('profile.edit.*') ? 'text-[#D4A574] font-semibold' : '' }}">
     Profil
     </a>
+
+    {{-- LOGOUT MOBILE --}}
+    <form action="{{ route('logout') }}" method="POST" class="mt-4">
+        @csrf
+        <button type="submit" class="w-full py-2 rounded-xl bg-gradient-to-r from-red-500 to-red-600 text-white">
+            Logout
+        </button>
+    </form>
 
 </div>
 

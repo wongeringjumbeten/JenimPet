@@ -81,15 +81,11 @@ transition duration-300 group">
                                 class="hidden absolute right-0 mt-2 w-36 bg-white rounded-xl shadow-lg overflow-hidden z-30">
                                 <a href="{{ route('admin.katalog.edit', $p->id_produk) }}"
                                     class="block px-4 py-2 text-sm text-[#2C1810] hover:bg-[#F5E6D3] transition">
-                                    Edit
+                                        Edit
                                 </a>
                                 <button onclick="toggleShow({{ $p->id_produk }}, 1)"
-                                    class="w-full text-left px-4 py-2 text-sm text-orange-600 hover:bg-orange-50 transition">
-                                    Jangan Tampilkan
-                                </button>
-                                <button onclick="openDeleteModal({{ $p->id_produk }})"
-                                    class="w-full text-left px-4 py-2 text-sm text-red-500 hover:bg-red-50 transition">
-                                    Hapus
+                                    class="w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-red-50 transition">
+                                        Hapus
                                 </button>
                             </div>
                         </div>
@@ -108,7 +104,7 @@ transition duration-300 group">
                                 Rp {{ number_format($p->harga, 0, ',', '.') }}
                             </span>
                             <span class="text-xs text-[#6B5847] bg-[#F5E6D3] px-2 py-1 rounded-full">
-                                🐹 Stok: {{ $p->stok }}
+                                Stok: {{ $p->stok }}
                             </span>
                         </div>
                     </div>
@@ -168,15 +164,11 @@ transition duration-300 group">
                                 class="hidden absolute right-0 mt-2 w-36 bg-white rounded-xl shadow-lg overflow-hidden z-30">
                                 <a href="{{ route('admin.katalog.edit', $p->id_produk) }}"
                                     class="block px-4 py-2 text-sm text-[#2C1810] hover:bg-[#F5E6D3] transition">
-                                    Edit
+                                        Edit
                                 </a>
                                 <button onclick="toggleShow({{ $p->id_produk }}, 0)"
                                     class="w-full text-left px-4 py-2 text-sm text-green-600 hover:bg-green-50 transition">
-                                    Tampilkan
-                                </button>
-                                <button onclick="openDeleteModal({{ $p->id_produk }})"
-                                    class="w-full text-left px-4 py-2 text-sm text-red-500 hover:bg-red-50 transition">
-                                    Hapus
+                                        Tampilkan
                                 </button>
                             </div>
                         </div>
@@ -195,7 +187,7 @@ transition duration-300 group">
                                 Rp {{ number_format($p->harga, 0, ',', '.') }}
                             </span>
                             <span class="text-xs text-[#6B5847] bg-[#F5E6D3] px-2 py-1 rounded-full">
-                                🐹 Stok: {{ $p->stok }}
+                                Stok: {{ $p->stok }}
                             </span>
                         </div>
                     </div>
@@ -218,30 +210,24 @@ opacity-0 pointer-events-none transition duration-300">
     p-6 rounded-2xl text-center shadow-2xl w-80
     scale-90 opacity-0 transition duration-300">
 
-        <div class="text-5xl mb-3"></div>
         <p class="mb-4 text-[#2C1810] font-medium">
-            Yakin ingin menghapus katalog ini?
+            Yakin ingin menghapus produk ini?
         </p>
-        <p class="text-sm text-red-500 mb-4">Tindakan ini tidak dapat dibatalkan!</p>
+        <p class="text-sm text-red-500 mb-4">Produk akan disembunyikan dari katalog pelanggan</p>
 
         <div class="flex justify-center gap-4">
             <button onclick="closeDeleteModal()"
             class="px-4 py-2 bg-gray-200 rounded-lg hover:scale-105 transition">
                 Batal
             </button>
-            <form id="deleteForm" method="POST">
-                @csrf
-                @method('DELETE')
-                <button type="submit"
-                class="px-4 py-2 bg-red-500 text-white rounded-lg hover:scale-105 transition">
-                    Hapus
-                </button>
-            </form>
+            <button onclick="confirmDelete()"
+            class="px-4 py-2 bg-red-500 text-white rounded-lg hover:scale-105 transition">
+                Hapus
+            </button>
         </div>
     </div>
 </div>
 
-{{-- SCRIPT --}}
 <script>
 // =======================
 // DROPDOWN TITIK 3
@@ -256,12 +242,20 @@ function toggleMenu(id) {
     menu.classList.toggle('hidden');
 }
 
+// Variabel untuk menyimpan id dan status yang akan dihapus
+let pendingId = null;
+let pendingStatus = null;
+
 // =======================
-// TOGGLE TAMPIL / HIDE
+// SOFT DELETE (HAPUS)
 // =======================
 function toggleShow(id, status) {
-    const action = status == 1 ? 'sembunyikan' : 'tampilkan';
-    if (!confirm(`Yakin ingin ${action} produk ini ${status == 1 ? 'dari katalog pelanggan' : 'kembali ke katalog pelanggan'}?`)) {
+    const action = status == 1 ? 'hapus' : 'tampilkan';
+    const message = status == 1
+        ? 'Yakin ingin menghapus produk ini? Produk akan disembunyikan dari katalog pelanggan.'
+        : 'Yakin ingin menampilkan kembali produk ini?';
+
+    if (!confirm(message)) {
         return;
     }
 
@@ -285,34 +279,6 @@ function toggleShow(id, status) {
         console.error('Error:', error);
         alert('Terjadi kesalahan');
     });
-}
-
-// =======================
-// DELETE MODAL
-// =======================
-function openDeleteModal(id) {
-    const modal = document.getElementById('deleteModal');
-    const box = document.getElementById('deleteBox');
-
-    modal.classList.remove('opacity-0', 'pointer-events-none');
-
-    setTimeout(() => {
-        box.classList.remove('scale-90', 'opacity-0');
-        box.classList.add('scale-100', 'opacity-100');
-    }, 10);
-
-    document.getElementById('deleteForm').action = `/admin/katalog/${id}`;
-}
-
-function closeDeleteModal() {
-    const modal = document.getElementById('deleteModal');
-    const box = document.getElementById('deleteBox');
-
-    box.classList.add('scale-90', 'opacity-0');
-
-    setTimeout(() => {
-        modal.classList.add('opacity-0', 'pointer-events-none');
-    }, 200);
 }
 
 // =======================

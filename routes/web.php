@@ -7,6 +7,8 @@ use App\Http\Controllers\c_pelanggan;
 use App\Http\Controllers\c_produk;
 use App\Http\Controllers\c_dashboard;
 use App\Http\Controllers\c_apiwilayah;
+use App\Http\Controllers\c_keranjang;
+use App\Http\Controllers\c_pesanan;
 
 Route::get('/test-google', function () {
     return redirect('/auth/google');
@@ -56,6 +58,36 @@ Route::middleware(['auth'])->group(function () {
 
     Route::get('/katalog', [c_produk::class, 'katalogPelanggan'])
         ->name('katalog.pelanggan');
+
+    Route::get('/katalog/{id}', [c_produk::class, 'detailPelanggan'])
+        ->name('katalog.detail');
+
+    Route::post('/checkout/proses', [c_pesanan::class, 'prosesCheckout'])
+        ->name('checkout.proses');
+
+    Route::get('/keranjang', [c_keranjang::class, 'index'])
+        ->name('keranjang.index');
+
+    Route::post('/keranjang/tambah', [c_keranjang::class, 'tambah'])
+        ->name('keranjang.tambah');
+
+    Route::patch('/keranjang/update/{id}', [c_keranjang::class, 'update'])
+        ->name('keranjang.update');
+
+    Route::delete('/keranjang/hapus/{id}', [c_keranjang::class, 'hapus'])
+        ->name('keranjang.hapus');
+
+    Route::patch('/keranjang/toggle-select/{id}', [c_keranjang::class, 'toggleSelect'])
+        ->name('keranjang.toggleSelect');
+
+    Route::get('/checkout', [c_pesanan::class, 'formCheckout'])
+        ->name('checkout.form');
+
+    Route::get('/pesanan', [c_pesanan::class, 'indexPelanggan'])
+        ->name('pesanan.index');
+
+    Route::get('/pesanan/{id}', [c_pesanan::class, 'detailPelanggan'])
+        ->name('pesanan.detail');
 
 
 // API Wilayah (Proxy)

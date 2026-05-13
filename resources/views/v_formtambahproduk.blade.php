@@ -2,7 +2,7 @@
 <html lang="id">
 <head>
     <meta charset="UTF-8">
-    <title>Edit Produk - JenimPet</title>
+    <title>Tambah Produk - JenimPet</title>
     @vite('resources/css/app.css')
 </head>
 
@@ -14,7 +14,7 @@
 rounded-3xl shadow-xl p-8 border border-[#E8D5C4]">
 
     <h1 class="text-3xl font-bold text-[#2C1810] mb-6">
-        ✏️ Edit Produk
+        Tambah Produk Baru
     </h1>
 
     {{-- ERROR GLOBAL --}}
@@ -24,15 +24,13 @@ rounded-3xl shadow-xl p-8 border border-[#E8D5C4]">
         </div>
     @endif
 
-    <form action="{{ route('admin.katalog.update', $produk->id_produk) }}"
-        method="POST" enctype="multipart/form-data">
+    <form action="{{ route('admin.katalog.store') }}" method="POST" enctype="multipart/form-data">
         @csrf
-        @method('PUT')
 
         {{-- ==================== FOTO PRODUK ==================== --}}
         <div class="mb-6">
             <label class="block text-sm font-semibold mb-2 text-[#6B5847]">
-                📸 Foto Produk
+                Foto Produk
             </label>
 
             <input type="file" name="foto_produk" id="fotoInput" class="hidden" accept="image/*">
@@ -43,33 +41,28 @@ rounded-3xl shadow-xl p-8 border border-[#E8D5C4]">
                 text-[#6B5847] cursor-pointer
                 hover:bg-[#D4A574]/10 transition relative">
 
-                {{-- PREVIEW (default dari database) --}}
-                <div class="mt-3 flex justify-center">
-                    <img id="previewImage"
-                        src="{{ asset('storage/'.$produk->foto_produk) }}"
-                        class="w-40 h-40 object-cover rounded-xl shadow-lg border-2 border-white">
+                <div id="uploadText" class="text-center transition duration-300">
+                    <p class="font-medium">Klik untuk pilih foto</p>
+                    <p class="text-sm opacity-70">JPG / PNG max 2MB</p>
                 </div>
 
-                {{-- TEXT (hidden kalo ada foto) --}}
-                <div id="uploadText" class="text-center transition duration-300 mt-2">
-                    <p class="font-medium text-sm">Klik untuk ganti foto</p>
-                    <p class="text-xs opacity-70">JPG / PNG max 2MB</p>
+                <div class="mt-3 flex justify-center">
+                    <img id="previewImage" class="w-32 h-32 object-cover rounded-xl hidden shadow-lg border-2 border-white">
                 </div>
             </div>
 
-            {{-- BUTTON HAPUS FOTO --}}
             <button type="button" id="removeImage"
                 class="mt-3 px-4 py-2 text-sm rounded-xl
                 bg-red-100 text-red-600 hover:bg-red-200
-                transition">
-                🗑️ Hapus Foto
+                hidden transition">
+                Hapus Foto
             </button>
         </div>
 
         {{-- ==================== NAMA PRODUK ==================== --}}
         <div class="mb-4">
             <input type="text" id="nama_produk" name="nama_produk"
-                value="{{ old('nama_produk', $produk->nama_produk) }}"
+                value="{{ old('nama_produk') }}"
                 placeholder="Nama Produk"
                 class="w-full p-3 rounded-xl border border-[#D4A574]/50 focus:ring-2 focus:ring-[#D4A574] focus:outline-none">
             <p id="errorNama" class="text-red-500 text-sm mt-1 hidden"></p>
@@ -80,25 +73,27 @@ rounded-3xl shadow-xl p-8 border border-[#E8D5C4]">
             <textarea name="deskripsi" id="deskripsi"
                 placeholder="Deskripsi Produk"
                 rows="4"
-                class="w-full p-3 rounded-xl border border-[#D4A574]/50 focus:ring-2 focus:ring-[#D4A574] focus:outline-none">{{ old('deskripsi', $produk->deskripsi) }}</textarea>
+                class="w-full p-3 rounded-xl border border-[#D4A574]/50 focus:ring-2 focus:ring-[#D4A574] focus:outline-none">{{ old('deskripsi') }}</textarea>
             <p class="text-xs text-[#6B5847] mt-1">* Deskripsi bersifat opsional</p>
         </div>
 
         {{-- ==================== HARGA ==================== --}}
         <div class="mb-4">
             <input type="text" id="harga" name="harga"
-                value="{{ old('harga', $produk->harga) }}"
+                value="{{ old('harga') }}"
                 placeholder="Harga (Rp)"
-                class="w-full p-3 rounded-xl border border-[#D4A574]/50 focus:ring-2 focus:ring-[#D4A574] focus:outline-none">
+                class="w-full p-3 rounded-xl border border-[#D4A574]/50 focus:ring-2 focus:ring-[#D4A574] focus:outline-none"
+                inputmode="numeric">
             <p id="errorHarga" class="text-red-500 text-sm mt-1 hidden"></p>
         </div>
 
         {{-- ==================== STOK ==================== --}}
         <div class="mb-6">
             <input type="text" id="stok" name="stok"
-                value="{{ old('stok', $produk->stok) }}"
+                value="{{ old('stok') }}"
                 placeholder="Stok"
-                class="w-full p-3 rounded-xl border border-[#D4A574]/50 focus:ring-2 focus:ring-[#D4A574] focus:outline-none">
+                class="w-full p-3 rounded-xl border border-[#D4A574]/50 focus:ring-2 focus:ring-[#D4A574] focus:outline-none"
+                inputmode="numeric">
             <p id="errorStok" class="text-red-500 text-sm mt-1 hidden"></p>
         </div>
 
@@ -106,15 +101,14 @@ rounded-3xl shadow-xl p-8 border border-[#E8D5C4]">
         <div class="flex justify-between items-center pt-4 border-t border-[#E8D5C4]">
             <a href="{{ route('admin.katalog') }}"
                 class="px-6 py-2 border border-[#D4A574] rounded-xl text-[#D4A574] hover:bg-[#D4A574] hover:text-white transition">
-                ← Batal
+                Batal
             </a>
 
-            <button type="submit"
-                id="submitBtn"
+            <button type="submit" id="submitBtn"
                 class="px-6 py-2 rounded-xl text-white
                 bg-gradient-to-r from-[#D4A574] to-[#B8965A]
                 hover:scale-105 hover:shadow-lg transition">
-                💾 Update Produk
+                Simpan Produk
             </button>
         </div>
 
@@ -122,7 +116,6 @@ rounded-3xl shadow-xl p-8 border border-[#E8D5C4]">
 
 </div>
 
-{{-- ==================== SCRIPT ==================== --}}
 <script>
 document.addEventListener('DOMContentLoaded', function () {
 
@@ -133,29 +126,22 @@ document.addEventListener('DOMContentLoaded', function () {
     const text = document.getElementById('uploadText');
     const removeBtn = document.getElementById('removeImage');
 
-    // Simpan URL lama buat fallback
-    let oldImageSrc = preview.src;
-
-    // klik box = buka file
     if (box) {
         box.addEventListener('click', () => {
             input.click();
         });
     }
 
-    // ketika pilih file
     input.addEventListener('change', function () {
         const file = this.files[0];
         if (!file) return;
 
-        // Validasi tipe file
         if (!file.type.match('image.*')) {
             alert('File harus berupa gambar (JPG/PNG)');
             this.value = '';
             return;
         }
 
-        // Validasi ukuran (max 2MB)
         if (file.size > 2 * 1024 * 1024) {
             alert('Ukuran file maksimal 2MB');
             this.value = '';
@@ -163,20 +149,19 @@ document.addEventListener('DOMContentLoaded', function () {
         }
 
         const reader = new FileReader();
-
         reader.onload = function (e) {
             preview.src = e.target.result;
+            preview.classList.remove('hidden');
             text.classList.add('hidden');
             removeBtn.classList.remove('hidden');
         };
-
         reader.readAsDataURL(file);
     });
 
-    // hapus foto (pake foto default)
     removeBtn.addEventListener('click', () => {
         input.value = '';
-        preview.src = oldImageSrc;
+        preview.src = '';
+        preview.classList.add('hidden');
         text.classList.remove('hidden');
         removeBtn.classList.add('hidden');
     });
@@ -208,16 +193,35 @@ document.addEventListener('DOMContentLoaded', function () {
         hideError(errNama);
 
         if (value === '') {
-            showError(errNama, '❌ Produk harus memiliki nama');
+            showError(errNama, 'Produk harus memiliki nama');
             return false;
         }
 
         if (value.length < 3) {
-            showError(errNama, '❌ Nama produk minimal 3 karakter');
+            showError(errNama, 'Nama produk minimal 3 karakter');
             return false;
         }
 
         return true;
+    }
+
+    // Fungsi untuk mencegah input karakter minus dan non-digit
+    function preventNegativeAndNonDigit(event, input) {
+        // Cegah karakter minus
+        if (event.key === '-' || event.key === 'e' || event.key === 'E') {
+            event.preventDefault();
+            return false;
+        }
+
+        // Filter input saat typing (opsional)
+        setTimeout(() => {
+            let value = input.value;
+            // Hapus semua karakter yang bukan digit
+            value = value.replace(/[^0-9]/g, '');
+            if (input.value !== value) {
+                input.value = value;
+            }
+        }, 10);
     }
 
     // Validasi Angka (Harga & Stok)
@@ -226,28 +230,78 @@ document.addEventListener('DOMContentLoaded', function () {
         hideError(errorEl);
 
         if (value === '') {
-            showError(errorEl, `❌ ${fieldName} harus diisi`);
+            showError(errorEl, `${fieldName} harus diisi`);
             return false;
         }
 
+        // Cek apakah hanya berisi angka
         if (!/^[0-9]+$/.test(value)) {
-            showError(errorEl, `❌ ${fieldName} harus berupa angka`);
+            showError(errorEl, `${fieldName} harus berupa angka (0-9)`);
             return false;
         }
 
-        let numValue = parseInt(value);
-        if (fieldName === 'Harga' && numValue <= 0) {
-            showError(errorEl, '❌ Harga harus lebih dari 0');
-            return false;
+        let numValue = parseInt(value, 10);
+
+        // Validasi khusus Harga
+        if (fieldName === 'Harga') {
+            if (numValue <= 0) {
+                showError(errorEl, 'Harga harus lebih dari 0');
+                return false;
+            }
+            if (numValue > 999999999) {
+                showError(errorEl, 'Harga terlalu besar, maksimal 999.999.999');
+                return false;
+            }
         }
 
-        if (fieldName === 'Stok' && numValue < 0) {
-            showError(errorEl, '❌ Stok tidak boleh negatif');
-            return false;
+        // Validasi khusus Stok
+        if (fieldName === 'Stok') {
+            if (numValue < 0) {
+                showError(errorEl, 'Stok tidak boleh negatif');
+                return false;
+            }
+            if (numValue > 999999) {
+                showError(errorEl, 'Stok terlalu besar, maksimal 999.999');
+                return false;
+            }
         }
 
         return true;
     }
+
+    // Validasi Foto (wajib di form tambah)
+    function validateFoto() {
+        const file = input.files[0];
+        // Cek apakah ada file yang dipilih atau ada preview (foto lama untuk edit)
+        if (!file && !preview.src) {
+            alert('Foto produk wajib diisi');
+            return false;
+        }
+        return true;
+    }
+
+    // Event untuk mencegah karakter minus dan non-digit di input harga dan stok
+    harga.addEventListener('keydown', (e) => preventNegativeAndNonDigit(e, harga));
+    stok.addEventListener('keydown', (e) => preventNegativeAndNonDigit(e, stok));
+
+    // Event untuk membersihkan input saat paste (mencegah teks dengan karakter non-digit)
+    harga.addEventListener('paste', (e) => {
+        setTimeout(() => {
+            let value = harga.value;
+            value = value.replace(/[^0-9]/g, '');
+            harga.value = value;
+            validateNumber(harga, errHarga, 'Harga');
+        }, 10);
+    });
+
+    stok.addEventListener('paste', (e) => {
+        setTimeout(() => {
+            let value = stok.value;
+            value = value.replace(/[^0-9]/g, '');
+            stok.value = value;
+            validateNumber(stok, errStok, 'Stok');
+        }, 10);
+    });
 
     // Real-time validation (on blur)
     nama.addEventListener('blur', validateNama);
@@ -256,8 +310,24 @@ document.addEventListener('DOMContentLoaded', function () {
 
     // Real-time clear error on input
     nama.addEventListener('input', () => hideError(errNama));
-    harga.addEventListener('input', () => hideError(errHarga));
-    stok.addEventListener('input', () => hideError(errStok));
+    harga.addEventListener('input', () => {
+        hideError(errHarga);
+        // Bersihkan karakter non-digit saat input
+        let value = harga.value;
+        value = value.replace(/[^0-9]/g, '');
+        if (harga.value !== value) {
+            harga.value = value;
+        }
+    });
+    stok.addEventListener('input', () => {
+        hideError(errStok);
+        // Bersihkan karakter non-digit saat input
+        let value = stok.value;
+        value = value.replace(/[^0-9]/g, '');
+        if (stok.value !== value) {
+            stok.value = value;
+        }
+    });
 
     // Submit validation
     form.addEventListener('submit', function (e) {
@@ -266,6 +336,7 @@ document.addEventListener('DOMContentLoaded', function () {
         if (!validateNama()) isValid = false;
         if (!validateNumber(harga, errHarga, 'Harga')) isValid = false;
         if (!validateNumber(stok, errStok, 'Stok')) isValid = false;
+        if (!validateFoto()) isValid = false;
 
         if (!isValid) {
             e.preventDefault();
@@ -276,7 +347,7 @@ document.addEventListener('DOMContentLoaded', function () {
             }
         } else {
             // Loading state
-            submitBtn.innerHTML = '⏳ Menyimpan...';
+            submitBtn.innerHTML = 'Menyimpan...';
             submitBtn.disabled = true;
         }
     });

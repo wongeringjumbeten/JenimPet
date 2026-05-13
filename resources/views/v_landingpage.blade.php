@@ -193,24 +193,24 @@
             <div class="max-w-7xl mx-auto px-6">
                 <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
                     <div class="animate-fade-up">
-                        <h2 class="font-playfair text-3xl lg:text-4xl font-bold text-primary">📍 Lokasi Toko</h2>
+                        <h2 class="font-playfair text-3xl lg:text-4xl font-bold text-primary">Lokasi Toko</h2>
                         <div class="mt-8 space-y-6">
                             <div class="flex gap-4 items-start group hover:translate-x-2 transition duration-300">
-                                <span class="text-2xl group-hover:scale-125 transition">📍</span>
+                                <span class="text-2xl group-hover:scale-125 transition"></span>
                                 <div>
                                     <p class="font-semibold text-primary">Address</p>
                                     <p class="text-secondary">Jl. Merpati No. 123, Jakarta Selatan, DKI Jakarta 12345</p>
                                 </div>
                             </div>
                             <div class="flex gap-4 items-start group hover:translate-x-2 transition duration-300 delay-100">
-                                <span class="text-2xl group-hover:scale-125 transition">📞</span>
+                                <span class="text-2xl group-hover:scale-125 transition"></span>
                                 <div>
                                     <p class="font-semibold text-primary">Phone</p>
                                     <p class="text-secondary">+62 812-3456-7890</p>
                                 </div>
                             </div>
                             <div class="flex gap-4 items-start group hover:translate-x-2 transition duration-300 delay-200">
-                                <span class="text-2xl group-hover:scale-125 transition">✉️</span>
+                                <span class="text-2xl group-hover:scale-125 transition"></span>
                                 <div>
                                     <p class="font-semibold text-primary">Email</p>
                                     <p class="text-secondary">hello@jenimpet.com</p>

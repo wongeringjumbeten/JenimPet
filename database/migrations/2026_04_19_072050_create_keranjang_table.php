@@ -17,14 +17,14 @@ return new class extends Migration
             $table->timestamps();
 
             $table->foreign('akun_id_akun')
-                  ->references('id_akun')
-                  ->on('akun')
-                  ->onDelete('cascade');
+                ->references('id_akun')
+                ->on('akun')
+                ->onDelete('cascade');
 
             $table->foreign('produk_id_produk')
-                  ->references('id_produk')
-                  ->on('produk')
-                  ->onDelete('cascade');
+                ->references('id_produk')
+                ->on('produk')
+                ->onDelete('cascade');
         });
     }
 

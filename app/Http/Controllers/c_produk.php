@@ -113,4 +113,10 @@ class c_produk extends Controller
 
         return view('v_katalogpelanggan', compact('produk'));
     }
+
+    public function detailPelanggan($id)
+{
+    $produk = m_produk::where('is_deleted', '0')->findOrFail($id);
+    return view('v_detailkatalogpelanggan', compact('produk'));
+}
 }

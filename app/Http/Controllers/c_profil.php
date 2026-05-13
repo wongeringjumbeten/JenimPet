@@ -4,6 +4,9 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use App\Models\m_kecamatan;
+use App\Models\m_kabupaten;    
+use App\Models\m_provinsi;
 
 class c_profil extends Controller
 {
@@ -109,6 +112,14 @@ public function updateAlamat(Request $request)
     return redirect()->route('profile')
         ->with('success', 'Alamat berhasil diperbarui!');
 }
+
+    public function editNama()
+{
+    return view('v_formupdatenamapelanggan', [
+        'user' => auth()->user()
+    ]);
+}
+
     public function updateNama(Request $request)
     {
     $request->validate([
