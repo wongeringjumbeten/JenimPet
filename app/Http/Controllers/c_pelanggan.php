@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\m_akun;
-use Illuminate\Support\Facades\DB;
+use App\Models\m_pesanan;
 use Illuminate\Http\Request;
 
 class c_pelanggan extends Controller
@@ -19,11 +19,12 @@ class c_pelanggan extends Controller
     {
         $pelanggan = m_akun::findOrFail($id);
 
-        $pesanan = DB::table('pesanan')
+        // 🔥 PAKAI MODEL m_pesanan DENGAN RELASI detail.produk 🔥
+        $pesanan = m_pesanan::with('detail.produk')
             ->where('akun_id', $id)
-            ->latest()
+            ->orderBy('created_at', 'desc')
             ->get();
 
-        return view('v_detailpelanggan', compact('pelanggan','pesanan'));
+        return view('v_detailpelanggan', compact('pelanggan', 'pesanan'));
     }
 }

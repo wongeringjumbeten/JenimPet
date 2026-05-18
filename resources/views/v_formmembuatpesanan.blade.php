@@ -63,8 +63,11 @@
 
     <form id="checkoutForm" action="{{ route('checkout.proses') }}" method="POST" enctype="multipart/form-data">
         @csrf
-        <input type="hidden" name="selected_items" id="selectedItemsInput" value="{{ json_encode($selectedItems ?? []) }}">
-
+        @if(!empty($selectedItems))
+            @foreach($selectedItems as $item)
+                <input type="hidden" name="selected_items[]" value="{{ $item }}">
+            @endforeach
+        @endif
         <div class="flex flex-col lg:flex-row gap-8">
 
             {{-- FORM KIRI: Data Pengiriman & Pembayaran --}}
@@ -78,15 +81,10 @@
                         </svg>
                         Alamat Pengiriman
                     </h2>
-                    <textarea name="alamat" id="alamat" rows="3" required
-                        class="w-full p-3 rounded-xl border border-[#D4A574]/50 focus:ring-2 focus:ring-[#D4A574] transition-all duration-200 bg-white/80"
-                        placeholder="Jl. Contoh No. 123, RT 01/RW 02, Kelurahan, Kecamatan, Kota, Provinsi, Kode Pos">{{ auth()->user()->alamat ?? '' }}</textarea>
-                    <div class="flex items-center gap-2 mt-2">
-                        <div id="alamatStatus" class="text-xs text-green-600 hidden flex items-center gap-1">
-                            <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
-                            <span>Alamat akan diperbarui ke profil Anda</span>
-                        </div>
-                    </div>
+                    <textarea name="alamat" id="alamat" rows="5" required
+                    class="w-full p-3 rounded-xl border border-[#D4A574]/50 focus:ring-2 focus:ring-[#D4A574] transition-all duration-200 bg-white/80"
+                    placeholder="Contoh: Jl. Mawar No. 12, RT 01/RW 02, Kelurahan Suka Maju, Kecamatan Suka Makmur, Kabupaten/Kota, Provinsi, Kode Pos 12345">{{ auth()->user()->full_alamat ?? auth()->user()->alamat ?? '' }}
+                    </textarea>
                 </div>
 
                 {{-- Metode Pembayaran (Dropdown Aesthetic) --}}
@@ -269,12 +267,22 @@
                         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
                         </svg>
-                        Pesan Sekarang
+                        Pesan
                     </button>
                 </div>
             </div>
         </div>
     </form>
+    @if ($errors->any())
+    <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative mb-4">
+        <strong class="font-bold">Ada kesalahan!</strong>
+        <ul class="list-disc pl-5 mt-2">
+            @foreach ($errors->all() as $error)
+                <li>{{ $error }}</li>
+            @endforeach
+        </ul>
+    </div>
+    @endif
 </div>
 
 <script>

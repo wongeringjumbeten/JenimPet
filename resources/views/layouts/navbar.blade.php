@@ -24,8 +24,8 @@ bg-white/60 backdrop-blur-xl shadow-md sticky top-0 z-[60]">
     Katalog
     </a>
 
-    <a href="#"
-    class="hover:text-[#D4A574]">
+    <a href="{{ route('admin.pesanan') }}"
+    class="{{ request()->routeIs('admin.pesanan*') ? 'text-[#D4A574] font-semibold' : 'hover:text-[#D4A574]' }}">
     Pesanan
     </a>
 
@@ -80,7 +80,7 @@ transform translate-x-full transition duration-300 z-50 p-6 flex flex-col gap-6"
 
     <a href="{{ route('admin.dashboard') }}">Dashboard</a>
     <a href="{{ route('admin.katalog') }}">Katalog</a>
-    <a href="#">Pesanan</a>
+    <a href="{{ route('admin.pesanan') }}">Pesanan</a>
     <a href="#">Laporan</a>
     <a href="{{ route('admin.pelanggan') }}">Pelanggan</a>
     <a href="#">Review</a>

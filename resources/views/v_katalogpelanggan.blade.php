@@ -15,7 +15,7 @@
 
     {{-- TITLE --}}
     <h1 class="text-3xl font-bold text-[#2C1810]">
-        Temukan Produk Terbaik untuk Hewan Kesayanganmu 
+        Temukan Produk Terbaik untuk Hewan Kesayanganmu
     </h1>
 
     <p class="text-[#6B5847] mt-2 mb-8 max-w-xl">
@@ -70,7 +70,7 @@
 
                     <a href="{{ route('katalog.detail', $item->id_produk) }}"
                     class="block text-center text-xs bg-[#D4A574] text-white px-3 py-1 rounded-lg hover:bg-[#B8965A] hover:scale-105 transition">
-                    Beli
+                    Beli Sekarang
                     </a>
 
                 </div>

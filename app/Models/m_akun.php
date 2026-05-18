@@ -18,8 +18,8 @@ class m_akun extends Authenticatable
         'email',
         'password',
         'no_telp',
-        'alamat',             // Sementara masih dipakai (nanti bisa dihapus)
-        'detail_alamat',      // Tambahin ini!
+        'alamat',
+        'detail_alamat',
         'is_admin',
         'google_id',
         'google_token',

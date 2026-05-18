@@ -43,7 +43,7 @@ class m_pesanan extends Model
     public function getStatusLabelAttribute()
     {
         $labels = [
-            'pengecekan pembayaran' => ['label' => 'Pengecekan Pembayaran', 'color' => 'bg-yellow-500'],
+            'pengecekan pembayaran' => ['label' => 'validasi Pembayaran', 'color' => 'bg-yellow-500'],
             'diproses' => ['label' => 'Diproses', 'color' => 'bg-blue-500'],
             'diantar' => ['label' => 'Diantar', 'color' => 'bg-indigo-500'],
             'ditolak' => ['label' => 'Ditolak', 'color' => 'bg-red-500'],

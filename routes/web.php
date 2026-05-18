@@ -140,4 +140,17 @@ Route::middleware(['auth', 'admin'])->group(function () {
     Route::patch('/admin/katalog/{id}/toggle-show', [c_produk::class, 'toggleShow'])
     ->name('admin.katalog.toggleShow');
 
+    // Pesanan Admin
+    Route::get('/admin/pesanan', [c_pesanan::class, 'indexAdmin'])
+        ->name('admin.pesanan');
+
+    Route::get('/admin/pesanan/{id}', [c_pesanan::class, 'detailAdmin'])
+        ->name('admin.pesanan.detail');
+
+    Route::patch('/admin/pesanan/{id}/status', [c_pesanan::class, 'updateStatus'])
+        ->name('admin.pesanan.updateStatus');
+
+    Route::patch('/admin/pesanan/{id}/resi', [c_pesanan::class, 'updateResi'])
+        ->name('admin.pesanan.updateResi');
+
 });

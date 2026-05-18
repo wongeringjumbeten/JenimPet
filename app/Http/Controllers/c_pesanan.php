@@ -13,46 +13,42 @@ class c_pesanan extends Controller
 {
     // ==================== PELANGGAN ====================
 
-    // Tampilkan halaman form checkout
-public function formCheckout(Request $request)
-{
-    $selectedItems = json_decode($request->selected_items, true);
+    public function formCheckout(Request $request)
+    {
+        $selectedItems = json_decode($request->selected_items, true);
 
-    if (empty($selectedItems)) {
-        return redirect()->route('keranjang.index')->with('error', 'Tidak ada item yang dipilih');
+        if (empty($selectedItems)) {
+            return redirect()->route('keranjang.index')->with('error', 'Tidak ada item yang dipilih');
+        }
+
+        $cartItems = m_keranjang::with('produk')
+            ->where('akun_id_akun', auth()->id())
+            ->whereIn('id_keranjang', $selectedItems)
+            ->get();
+
+        if ($cartItems->isEmpty()) {
+            return redirect()->route('keranjang.index')->with('error', 'Item tidak ditemukan');
+        }
+
+        $totalHarga = $cartItems->sum(function($item) {
+            return $item->produk->harga * $item->kuantitas;
+        });
+
+        return view('v_formmembuatpesanan', compact('cartItems', 'totalHarga', 'selectedItems'));
     }
 
-    // Ambil detail item dari keranjang
-    $cartItems = m_keranjang::with('produk')
-        ->where('akun_id_akun', auth()->id())
-        ->whereIn('id_keranjang', $selectedItems)
-        ->get();
-
-    if ($cartItems->isEmpty()) {
-        return redirect()->route('keranjang.index')->with('error', 'Item tidak ditemukan');
-    }
-
-    $totalHarga = $cartItems->sum(function($item) {
-        return $item->produk->harga * $item->kuantitas;
-    });
-
-    return view('v_formmembuatpesanan', compact('cartItems', 'totalHarga', 'selectedItems'));
-}
-
-    // Proses checkout dari keranjang
     public function prosesCheckout(Request $request)
     {
-        // 1. VALIDASI
-        $request->validate([
+        // 1. VALIDASI (HAPUS VALIDASI ALAMAT)
+            $request->validate([
             'selected_items' => 'required|array',
             'selected_items.*' => 'integer|exists:keranjang,id_keranjang',
-            'alamat' => 'required|string|min:10|max:500',
-            'metode_pembayaran' => 'required|string|in:transfer_bca,transfer_mandiri,e_wallet',
+            'alamat' => 'required|string|min:15|max:500',
+            'metode_pembayaran' => 'required|string|in:dana,gopay,shopeepay,bri,mandiri,bca',
             'bukti_pembayaran' => 'required|image|mimes:jpeg,png,jpg|max:2048',
             'catatan' => 'nullable|string|max:500'
         ]);
-
-        // 2. AMBIL SELECTED ITEMS DARI KERANJANG
+        // 2. AMBIL SELECTED ITEMS
         $selectedItems = $request->selected_items;
         $cartItems = m_keranjang::with('produk')
             ->where('akun_id_akun', auth()->id())
@@ -60,45 +56,44 @@ public function formCheckout(Request $request)
             ->get();
 
         if ($cartItems->isEmpty()) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Item tidak ditemukan di keranjang'
-            ], 404);
+            return redirect()->back()->with('error', 'Item tidak ditemukan di keranjang');
         }
 
-        // 3. CEK STOK PRODUK
+        // 3. CEK STOK
         foreach ($cartItems as $item) {
             if ($item->kuantitas > $item->produk->stok) {
-                return response()->json([
-                    'success' => false,
-                    'message' => "Stok produk {$item->produk->nama_produk} tidak mencukupi. Stok tersedia: {$item->produk->stok}"
-                ], 400);
+                return redirect()->back()->with('error', "Stok produk {$item->produk->nama_produk} tidak mencukupi. Tersedia: {$item->produk->stok}");
             }
         }
 
-        // 4. UPLOAD BUKTI PEMBAYARAN
-        $buktiFile = $request->file('bukti_pembayaran');
-        $buktiPath = $buktiFile->store('bukti_pembayaran', 'public');
+        // 4. CEK ALAMAT USER
+        $user = auth()->user();
+        if (empty($user->alamat)) {
+            return redirect()->back()->with('error', 'Alamat pengiriman wajib diisi. Silakan lengkapi profil Anda terlebih dahulu.');
+        }
 
-        // 5. HITUNG TOTAL PEMBAYARAN
+        // 5. UPLOAD BUKTI
+        $buktiPath = $request->file('bukti_pembayaran')->store('bukti_pembayaran', 'public');
+
+        // 6. HITUNG TOTAL
         $totalPembayaran = 0;
         foreach ($cartItems as $item) {
             $totalPembayaran += $item->produk->harga * $item->kuantitas;
         }
 
-        // 6. SIMPAN PESANAN
+        // 7. SIMPAN PESANAN (DENGAN SNAPSHOT ALAMAT)
         $pesanan = m_pesanan::create([
-            'akun_id' => auth()->id(),
-            'tanggal_pesanan' => now(),
-            'total_pembayaran' => $totalPembayaran,
-            'status_pesanan' => 'pengecekan pembayaran',
-            'alamat' => $request->alamat,
-            'catatan' => $request->catatan,
-            'metode_pembayaran' => $request->metode_pembayaran,
-            'bukti_pembayaran' => $buktiPath
-        ]);
+    'akun_id' => auth()->id(),
+    'tanggal_pesanan' => now(),
+    'total_pembayaran' => $totalPembayaran,
+    'status_pesanan' => 'pengecekan pembayaran',
+    'alamat' => $request->alamat, 
+    'catatan' => $request->catatan,
+    'metode_pembayaran' => $request->metode_pembayaran,
+    'bukti_pembayaran' => $buktiPath
+    ]);
 
-        // 7. SIMPAN DETAIL PESANAN & KURANGI STOK
+        // 8. SIMPAN DETAIL & KURANGI STOK
         foreach ($cartItems as $item) {
             m_detailpesanan::create([
                 'pesanan_id' => $pesanan->id_pesanan,
@@ -107,36 +102,30 @@ public function formCheckout(Request $request)
                 'harga_satuan' => $item->produk->harga
             ]);
 
-            // Kurangi stok produk
             $produk = m_produk::find($item->produk_id_produk);
             $produk->stok -= $item->kuantitas;
             $produk->save();
         }
 
-        // 8. HAPUS ITEM DARI KERANJANG
+        // 9. HAPUS KERANJANG
         m_keranjang::where('akun_id_akun', auth()->id())
             ->whereIn('id_keranjang', $selectedItems)
             ->delete();
 
-        // 9. RETURN RESPONSE
-        return response()->json([
-            'success' => true,
-            'message' => 'Pesanan berhasil dibuat!',
-            'redirect' => route('pesanan.detail', $pesanan->id_pesanan)
-        ]);
+        // 10. REDIRECT
+        return redirect()->route('pesanan.detail', $pesanan->id_pesanan)
+            ->with('success', 'Pesanan berhasil dibuat!');
     }
 
-    // Lihat daftar pesanan pelanggan
     public function indexPelanggan()
     {
         $pesanan = m_pesanan::where('akun_id', auth()->id())
             ->orderBy('created_at', 'desc')
             ->get();
 
-        return view('v_pesanan_pelanggan', compact('pesanan'));
+        return view('v_pesananpelanggan', compact('pesanan'));
     }
 
-    // Lihat detail pesanan pelanggan
     public function detailPelanggan($id)
     {
         $pesanan = m_pesanan::with('detail.produk')
@@ -144,29 +133,30 @@ public function formCheckout(Request $request)
             ->where('id_pesanan', $id)
             ->firstOrFail();
 
-        return view('v_detail_pesanan_pelanggan', compact('pesanan'));
+        return view('v_detailpesananpelanggan', compact('pesanan'));
     }
 
     // ==================== ADMIN ====================
 
-    // Lihat semua pesanan (admin)
-    public function indexAdmin()
+    public function indexAdmin(Request $request)
     {
-        $pesanan = m_pesanan::with('user', 'detail.produk')
-            ->orderBy('created_at', 'desc')
-            ->get();
+    $query = m_pesanan::with('user', 'detail.produk');
 
-        return view('v_pesanan_admin', compact('pesanan'));
+    if ($request->has('status') && $request->status != '') {
+        $query->where('status_pesanan', $request->status);
     }
 
-    // Lihat detail pesanan (admin)
+    $pesanan = $query->orderBy('created_at', 'desc')->get();
+
+    return view('v_pesananadmin', compact('pesanan'));
+    }
+
     public function detailAdmin($id)
     {
         $pesanan = m_pesanan::with('user', 'detail.produk')->findOrFail($id);
-        return view('v_detail_pesanan_admin', compact('pesanan'));
+        return view('v_detailpesananadmin', compact('pesanan'));
     }
 
-    // Update status pesanan (admin)
     public function updateStatus(Request $request, $id)
     {
         $request->validate([
@@ -182,7 +172,6 @@ public function formCheckout(Request $request)
             ->with('success', "Status pesanan berhasil diubah dari {$oldStatus} menjadi {$request->status}");
     }
 
-    // Update nomor resi (admin)
     public function updateResi(Request $request, $id)
     {
         $request->validate([
