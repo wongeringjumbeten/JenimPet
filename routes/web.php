@@ -7,8 +7,10 @@ use App\Http\Controllers\c_pelanggan;
 use App\Http\Controllers\c_produk;
 use App\Http\Controllers\c_dashboard;
 use App\Http\Controllers\c_apiwilayah;
+use App\Http\Controllers\c_apiongkir;
 use App\Http\Controllers\c_keranjang;
 use App\Http\Controllers\c_pesanan;
+use App\Services\RajaOngkirService;
 
 Route::get('/test-google', function () {
     return redirect('/auth/google');
@@ -94,7 +96,19 @@ Route::middleware(['auth'])->group(function () {
 Route::get('/api/wilayah/provinces', [c_apiwilayah::class, 'getProvinces']);
 Route::get('/api/wilayah/regencies/{provinceCode}', [c_apiwilayah::class, 'getRegencies']);
 Route::get('/api/wilayah/districts/{regencyCode}', [c_apiwilayah::class, 'getDistricts']);
+
+
+// API RajaOngkir
+Route::prefix('api/ongkir')->group(function () {
+    Route::get('/search-destination', [c_apiongkir::class, 'searchDestination']);
+    Route::post('/calculate-cost', [c_apiongkir::class, 'calculateCost']);
 });
+});
+
+Route::get('/test-ongkir', function (RajaOngkirService $rajaOngkir)
+    { return $rajaOngkir->searchDestination('SURABAYA JAWA TIMUR');
+    });
+
 //AREA ADMIN
 Route::middleware(['auth', 'admin'])->group(function () {
 

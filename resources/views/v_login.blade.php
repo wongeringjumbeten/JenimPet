@@ -256,5 +256,75 @@
             50% { transform: translateY(-20px) rotate(5deg); }
         }
     </style>
+
+    {{-- CONFETTI WELCOME ONLY --}}
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.2/dist/confetti.browser.min.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            setTimeout(() => {
+                confetti({
+                    particleCount: 80,
+                    spread: 70,
+                    origin: { y: 0.6 },
+                    colors: ['#D4A574', '#B8956A', '#E8D5C4', '#F5E6D3'],
+                    gravity: 0.4,
+                    scalar: 1.2,
+                    zIndex: 1000
+                });
+            }, 600);
+        });
+    </script>
+
+    <!-- HUJAN HAMSTER -->
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const container = document.body;
+        const hamsterChars = ['🐹', '🐹', '🐹', '🐭', '🐹'];
+        const colors = ['#D4A574', '#B8956A', '#E8D5C4', '#F5E6D3'];
+
+        function createHamsterRain() {
+            for (let i = 0; i < 25; i++) {
+                setTimeout(() => {
+                    const hamster = document.createElement('div');
+                    hamster.innerHTML = hamsterChars[Math.floor(Math.random() * hamsterChars.length)];
+                    hamster.style.position = 'fixed';
+                    hamster.style.fontSize = `${Math.random() * 16 + 12}px`;
+                    hamster.style.color = colors[Math.floor(Math.random() * colors.length)];
+                    hamster.style.pointerEvents = 'none';
+                    hamster.style.zIndex = '1000';
+                    hamster.style.textShadow = '0 2px 4px rgba(0,0,0,0.1)';
+
+                    // Random start position (top edge)
+                    const left = Math.random() * 100;
+                    hamster.style.left = `${left}%`;
+                    hamster.style.top = '-20px';
+
+                    // Animate falling
+                    const duration = Math.random() * 8 + 6; // 6–14 detik
+                    const rotate = Math.random() * 360;
+
+                    hamster.animate([
+                        { transform: `translateY(0) rotate(0deg)`, opacity: 1 },
+                        { transform: `translateY(${window.innerHeight + 50}px) rotate(${rotate}deg)`, opacity: 0 }
+                    ], {
+                        duration: duration * 1000,
+                        easing: 'cubic-bezier(0.2, 0.8, 0.2, 1)',
+                        fill: 'forwards'
+                    });
+
+                    container.appendChild(hamster);
+
+                    // Auto-remove after animation
+                    setTimeout(() => {
+                        if (hamster.parentNode) hamster.remove();
+                    }, duration * 1000 + 500);
+                }, i * 200); // staggered spawn
+            }
+        }
+
+        // Trigger after slight delay (so page is ready)
+        setTimeout(createHamsterRain, 800);
+    });
+</script>
 </body>
 </html>

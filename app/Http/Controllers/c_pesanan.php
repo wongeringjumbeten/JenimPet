@@ -75,11 +75,17 @@ class c_pesanan extends Controller
         // 5. UPLOAD BUKTI
         $buktiPath = $request->file('bukti_pembayaran')->store('bukti_pembayaran', 'public');
 
-        // 6. HITUNG TOTAL
-        $totalPembayaran = 0;
+        // 6. HITUNG TOTAL PRODUK
+        $totalProduk = 0;
         foreach ($cartItems as $item) {
-            $totalPembayaran += $item->produk->harga * $item->kuantitas;
+            $totalProduk += $item->produk->harga * $item->kuantitas;
         }
+
+        // 6b. AMBIL ONGKIR DARI REQUEST (dari form checkout)
+        $ongkir = $request->ongkir ?? 0;
+
+        // 6c. TOTAL PEMBAYARAN = TOTAL PRODUK + ONGKIR
+        $totalPembayaran = $totalProduk + $ongkir;
 
         // 7. SIMPAN PESANAN (DENGAN SNAPSHOT ALAMAT)
         $pesanan = m_pesanan::create([
@@ -87,7 +93,7 @@ class c_pesanan extends Controller
     'tanggal_pesanan' => now(),
     'total_pembayaran' => $totalPembayaran,
     'status_pesanan' => 'pengecekan pembayaran',
-    'alamat' => $request->alamat, 
+    'alamat' => $request->alamat,
     'catatan' => $request->catatan,
     'metode_pembayaran' => $request->metode_pembayaran,
     'bukti_pembayaran' => $buktiPath
