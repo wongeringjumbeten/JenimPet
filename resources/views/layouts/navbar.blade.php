@@ -29,8 +29,8 @@ bg-white/60 backdrop-blur-xl shadow-md sticky top-0 z-[60]">
     Pesanan
     </a>
 
-    <a href="#"
-    class="hover:text-[#D4A574]">
+    <a href="{{route('admin.laporan')}}"
+    class="{{ request()->routeIs('admin.laporan') ? 'text-[#D4A574] font-semibold' : 'hover:text-[#D4A574]' }}">
     Laporan
     </a>
 
@@ -39,8 +39,8 @@ bg-white/60 backdrop-blur-xl shadow-md sticky top-0 z-[60]">
     Pelanggan
     </a>
 
-    <a href="#"
-    class="hover:text-[#D4A574]">
+    <a href="{{ route('admin.review')}}"
+    class="{{ request()->routeIs('admin.review') ? 'text-[#D4A574] font-semibold' : 'hover:text-[#D4A574]' }}">
     Review
     </a>
 
@@ -81,9 +81,9 @@ transform translate-x-full transition duration-300 z-50 p-6 flex flex-col gap-6"
     <a href="{{ route('admin.dashboard') }}">Dashboard</a>
     <a href="{{ route('admin.katalog') }}">Katalog</a>
     <a href="{{ route('admin.pesanan') }}">Pesanan</a>
-    <a href="#">Laporan</a>
+    <a href="{{ route('admin.laporan') }}">Laporan</a>
     <a href="{{ route('admin.pelanggan') }}">Pelanggan</a>
-    <a href="#">Review</a>
+    <a href="{{ route('admin.review')}}">Review</a>
     <a href="{{ route('admin.profile') }}">Profil</a>
 
 

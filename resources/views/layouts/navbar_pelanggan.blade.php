@@ -3,27 +3,39 @@
 bg-white/70 backdrop-blur-xl shadow-md sticky top-0 z-[60]">
 
     {{-- LOGO --}}
-    <div class="flex items-center gap-3">
+    <a href="{{ route('dashboard') }}" class="flex items-center gap-3 group">
         <div class="w-10 h-10 bg-gradient-to-br from-[#D4A574] to-[#B8965A]
-            rounded-full flex items-center justify-center text-white font-bold">
-            P
+            rounded-full flex items-center justify-center text-white font-bold text-lg
+            group-hover:scale-110 transition duration-300">
+            🐹
         </div>
-        <h1 class="font-semibold text-[#2C1810]">JenimPet</h1>
-    </div>
+        <h1 class="font-semibold text-[#2C1810] group-hover:text-[#D4A574] transition">
+            JenimPet
+        </h1>
+    </a>
 
     {{-- MENU DESKTOP --}}
     <div class="hidden md:flex gap-8 text-[#6B5847] font-medium">
 
+        {{-- Dashboard --}}
+        <a href="{{ route('dashboard') }}"
+        class="{{ request()->routeIs('dashboard') ? 'text-[#D4A574] font-semibold' : 'hover:text-[#D4A574]' }}">
+        Dashboard
+        </a>
+
+        {{-- Katalog --}}
         <a href="{{ route('katalog.pelanggan') }}"
         class="{{ request()->routeIs('katalog.pelanggan') ? 'text-[#D4A574] font-semibold' : 'hover:text-[#D4A574]' }}">
         Katalog
         </a>
 
+        {{-- Pesanan --}}
         <a href="{{ route('pesanan.index') }}"
-        class="hover:text-[#D4A574] transition">
+        class="{{ request()->routeIs('pesanan.index') ? 'text-[#D4A574] font-semibold' : 'hover:text-[#D4A574]' }}">
         Pesanan
         </a>
 
+        {{-- Keranjang dengan Badge --}}
         @php
             $cartCount = App\Http\Controllers\c_keranjang::getCartCount();
         @endphp
@@ -38,11 +50,13 @@ bg-white/70 backdrop-blur-xl shadow-md sticky top-0 z-[60]">
         @endif
         </a>
 
-        <a href="#"
-        class="hover:text-[#D4A574]">
+        {{-- Review --}}
+        <a href="{{ route('review') }}"
+        class="{{ request()->routeIs('review') ? 'text-[#D4A574] font-semibold' : 'hover:text-[#D4A574]' }}">
         Review
         </a>
 
+        {{-- Profil --}}
         <a href="{{ route('profile') }}"
         class="{{ request()->routeIs('profile') || request()->routeIs('profile.edit.*') ? 'text-[#D4A574] font-semibold' : 'hover:text-[#D4A574]' }}">
         Profil
@@ -74,16 +88,25 @@ bg-white/70 backdrop-blur-xl shadow-md sticky top-0 z-[60]">
 class="fixed top-0 right-0 w-64 h-full bg-white shadow-2xl
 transform translate-x-full transition duration-300 z-[999] p-6 flex flex-col gap-6">
 
+    {{-- Dashboard --}}
+    <a href="{{ route('dashboard') }}"
+    class="{{ request()->routeIs('dashboard') ? 'text-[#D4A574] font-semibold' : '' }}">
+    Dashboard
+    </a>
+
+    {{-- Katalog --}}
     <a href="{{ route('katalog.pelanggan') }}"
     class="{{ request()->routeIs('katalog.pelanggan') ? 'text-[#D4A574] font-semibold' : '' }}">
     Katalog
     </a>
 
+    {{-- Pesanan --}}
     <a href="{{ route('pesanan.index') }}"
-    class="hover:text-[#D4A574] transition">
+    class="{{ request()->routeIs('pesanan.index') ? 'text-[#D4A574] font-semibold' : '' }}">
     Pesanan
     </a>
 
+    {{-- Keranjang dengan Badge --}}
     @php
         $cartCountMobile = App\Http\Controllers\c_keranjang::getCartCount();
     @endphp
@@ -98,8 +121,13 @@ transform translate-x-full transition duration-300 z-[999] p-6 flex flex-col gap
         @endif
     </a>
 
-    <a href="#">Review</a>
+    {{-- Review --}}
+    <a href="{{ route('review') }}"
+    class="{{ request()->routeIs('review') ? 'text-[#D4A574] font-semibold' : '' }}">
+    Review
+    </a>
 
+    {{-- Profil --}}
     <a href="{{ route('profile') }}"
     class="{{ request()->routeIs('profile') || request()->routeIs('profile.edit.*') ? 'text-[#D4A574] font-semibold' : '' }}">
     Profil

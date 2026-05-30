@@ -49,15 +49,17 @@ class c_apiongkir extends Controller
             $request->courier
         );
 
-        // Format ulang hasil ongkir
+        // Format ulang hasil ongkir menyesuaikan struktur RajaOngkir API V2
         $costs = [];
-        if (isset($result['data']['results'][0]['costs'])) {
-            foreach ($result['data']['results'][0]['costs'] as $cost) {
+
+        // Memeriksa apakah response 'data' tersedia dan merupakan array
+        if (isset($result['data']) && is_array($result['data'])) {
+            foreach ($result['data'] as $cost) {
                 $costs[] = [
                     'service' => $cost['service'],
                     'description' => $cost['description'],
-                    'cost' => $cost['cost'][0]['value'],
-                    'etd' => $cost['cost'][0]['etd']
+                    'cost' => $cost['cost'],   // V2 langsung menggunakan 'cost', bukan ['cost'][0]['value']
+                    'etd' => $cost['etd']      // V2 langsung memberikan 'etd'
                 ];
             }
         }

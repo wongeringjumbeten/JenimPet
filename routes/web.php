@@ -11,6 +11,7 @@ use App\Http\Controllers\c_apiongkir;
 use App\Http\Controllers\c_keranjang;
 use App\Http\Controllers\c_pesanan;
 use App\Services\RajaOngkirService;
+use App\Http\Controllers\c_laporan;
 
 Route::get('/test-google', function () {
     return redirect('/auth/google');
@@ -39,6 +40,8 @@ Route::middleware(['auth'])->group(function () {
             'user' => auth()->user()
         ]);
     })->name('profile');
+
+    Route::get('/dashboard', [c_dashboard::class, 'dashboardPelanggan'])->name('dashboard');
 
     Route::get('/profile/edit-hp', [c_profil::class, 'editNoHpUser'])
         ->name('profile.edit.hp');
@@ -115,11 +118,7 @@ Route::middleware(['auth', 'admin'])->group(function () {
     Route::get('/admin/dashboard', [c_dashboard::class, 'index'])
     ->name('admin.dashboard');
 
-    Route::get('/admin/profile', function () {
-        return view('v_profiladmin', [
-            'user' => auth()->user()
-        ]);
-    })->name('admin.profile');
+    Route::get('/admin/profile', [c_dashboard::class, 'profileAdmin'])->name('admin.profile');
 
     Route::get('/admin/profile/edit-hp', [c_profil::class, 'editNoHpAdmin'])
         ->name('admin.edit.hp');
@@ -167,4 +166,23 @@ Route::middleware(['auth', 'admin'])->group(function () {
     Route::patch('/admin/pesanan/{id}/resi', [c_pesanan::class, 'updateResi'])
         ->name('admin.pesanan.updateResi');
 
+
+    Route::get('/admin/laporan/data', [c_laporan::class, 'index'])->name('admin.laporan.data');
+    Route::get('/admin/laporan', function () {
+        return view('v_laporanomset');
+    })->name('admin.laporan');
+
+    Route::get('/admin/laporan/transaksi', [c_laporan::class, 'getTransaksi'])->name('admin.laporan.transaksi');
+
 });
+
+//REVIEW
+// Area Pelanggan
+Route::get('/review', function () {
+    return view('v_reviewpelanggan');
+})->name('review');
+
+// Area Admin
+Route::get('/admin/review', function () {
+    return view('v_reviewadmin');
+})->name('admin.review');
