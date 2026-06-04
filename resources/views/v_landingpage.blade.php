@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>JenimPet - Teman Hamster Terbaikmu</title>
-
+    <link rel="icon" type="image/png" href="{{ asset('icons/JenimHamsterLogo.png') }}">
     @vite(['resources/css/app.css'])
 
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700;800&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -114,7 +114,7 @@
             </div>
         </section>
 
-        {{-- KATALOG HAMSTER --}}
+        {{-- KATALOG HAMSTER (REAL DATA) --}}
         <section id="katalog" class="py-20 bg-white/40 relative overflow-hidden">
             <div class="absolute inset-0 opacity-5 pointer-events-none">
                 <div class="absolute top-10 left-1/4 text-7xl animate-float">🐹</div>
@@ -128,62 +128,40 @@
                 </div>
 
                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                    {{-- Card 1: Cinnamon --}}
-                    <div class="hamster-card group animate-fade-up delay-100">
+                    @forelse($produkTerbaru as $item)
+                    <div class="hamster-card group animate-fade-up delay-{{ $loop->iteration * 100 }}">
                         <div class="overflow-hidden rounded-2xl relative">
-                            <img src="https://placehold.co/400x300/F5E6D3/B8956A?text=🐹+Cinnamon" alt="Cinnamon Hamster" class="w-full h-64 object-cover group-hover:scale-110 transition duration-500">
+                            <img src="{{ asset('storage/'.$item->foto_produk) }}"
+                                 alt="{{ $item->nama_produk }}"
+                                 class="w-full h-64 object-cover group-hover:scale-110 transition duration-500">
                             <div class="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent opacity-0 group-hover:opacity-100 transition duration-300"></div>
+                            @if($loop->first)
                             <div class="absolute top-3 right-3 bg-white/90 rounded-full px-2 py-1 text-xs font-bold text-amber-dark shadow-md">
                                 ⭐ Best Seller
                             </div>
-                        </div>
-                        <div class="p-6 text-center">
-                            <h3 class="font-playfair text-2xl font-bold text-primary group-hover:text-amber-dark transition">Cinnamon</h3>
-                            <p class="text-tertiary text-sm">Syrian hamster</p>
-                            <p class="text-amber-dark font-bold text-xl mt-3">Rp 150.000</p>
-                            <button class="buy-btn mt-4 w-full group-hover:shadow-xl">
-                                <span class="inline-block group-hover:scale-110 transition">🐹</span> Beli Sekarang
-                                <span class="inline-block group-hover:translate-x-1 transition">→</span>
-                            </button>
-                        </div>
-                    </div>
-
-                    {{-- Card 2: Mocha --}}
-                    <div class="hamster-card group animate-fade-up delay-200">
-                        <div class="overflow-hidden rounded-2xl relative">
-                            <img src="https://placehold.co/400x300/E8D5C4/9B6B3F?text=🐹+Mocha" alt="Mocha Hamster" class="w-full h-64 object-cover group-hover:scale-110 transition duration-500">
-                            <div class="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent opacity-0 group-hover:opacity-100 transition duration-300"></div>
-                        </div>
-                        <div class="p-6 text-center">
-                            <h3 class="font-playfair text-2xl font-bold text-primary group-hover:text-amber-dark transition">Mocha</h3>
-                            <p class="text-tertiary text-sm">Roborovski hamster</p>
-                            <p class="text-amber-dark font-bold text-xl mt-3">Rp 120.000</p>
-                            <button class="buy-btn mt-4 w-full">
-                                <span class="inline-block group-hover:scale-110 transition">🐹</span> Beli Sekarang
-                                <span class="inline-block group-hover:translate-x-1 transition">→</span>
-                            </button>
-                        </div>
-                    </div>
-
-                    {{-- Card 3: Snowball --}}
-                    <div class="hamster-card group animate-fade-up delay-300">
-                        <div class="overflow-hidden rounded-2xl relative">
-                            <img src="https://placehold.co/400x300/FAF7F2/B8956A?text=🐹+Snowball" alt="Snowball Hamster" class="w-full h-64 object-cover group-hover:scale-110 transition duration-500">
-                            <div class="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent opacity-0 group-hover:opacity-100 transition duration-300"></div>
+                            @endif
+                            @if($loop->last)
                             <div class="absolute top-3 right-3 bg-amber-dark/90 rounded-full px-2 py-1 text-xs font-bold text-white shadow-md">
                                 🎁 New
                             </div>
+                            @endif
                         </div>
                         <div class="p-6 text-center">
-                            <h3 class="font-playfair text-2xl font-bold text-primary group-hover:text-amber-dark transition">Snowball</h3>
-                            <p class="text-tertiary text-sm">Winter white hamster</p>
-                            <p class="text-amber-dark font-bold text-xl mt-3">Rp 135.000</p>
-                            <button class="buy-btn mt-4 w-full">
+                            <h3 class="font-playfair text-2xl font-bold text-primary group-hover:text-amber-dark transition">{{ $item->nama_produk }}</h3>
+                            <p class="text-tertiary text-sm line-clamp-2">{{ $item->deskripsi }}</p>
+                            <p class="text-amber-dark font-bold text-xl mt-3">Rp {{ number_format($item->harga, 0, ',', '.') }}</p>
+                            <a href="{{ route('login') }}" class="buy-btn mt-4 w-full inline-block text-center group-hover:shadow-xl">
                                 <span class="inline-block group-hover:scale-110 transition">🐹</span> Beli Sekarang
                                 <span class="inline-block group-hover:translate-x-1 transition">→</span>
-                            </button>
+                            </a>
                         </div>
                     </div>
+                    @empty
+                    <div class="col-span-3 text-center py-12">
+                        <p class="text-secondary text-lg">Belum ada produk tersedia</p>
+                        <p class="text-tertiary text-sm mt-2">Silakan cek kembali nanti</p>
+                    </div>
+                    @endforelse
                 </div>
             </div>
         </section>
@@ -193,24 +171,31 @@
             <div class="max-w-7xl mx-auto px-6">
                 <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
                     <div class="animate-fade-up">
-                        <h2 class="font-playfair text-3xl lg:text-4xl font-bold text-primary">Lokasi Toko</h2>
+                        <h2 class="font-playfair text-3xl lg:text-4xl font-bold text-primary">📍 Lokasi Toko</h2>
                         <div class="mt-8 space-y-6">
                             <div class="flex gap-4 items-start group hover:translate-x-2 transition duration-300">
-                                <span class="text-2xl group-hover:scale-125 transition"></span>
+                                <svg class="w-6 h-6 text-amber-dark group-hover:scale-125 transition" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path>
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                                </svg>
                                 <div>
-                                    <p class="font-semibold text-primary">Address</p>
+                                    <p class="font-semibold text-primary">Alamat</p>
                                     <p class="text-secondary">Jl. Merpati No. 123, Jakarta Selatan, DKI Jakarta 12345</p>
                                 </div>
                             </div>
                             <div class="flex gap-4 items-start group hover:translate-x-2 transition duration-300 delay-100">
-                                <span class="text-2xl group-hover:scale-125 transition"></span>
+                                <svg class="w-6 h-6 text-amber-dark group-hover:scale-125 transition" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"></path>
+                                </svg>
                                 <div>
-                                    <p class="font-semibold text-primary">Phone</p>
+                                    <p class="font-semibold text-primary">Telepon</p>
                                     <p class="text-secondary">+62 812-3456-7890</p>
                                 </div>
                             </div>
                             <div class="flex gap-4 items-start group hover:translate-x-2 transition duration-300 delay-200">
-                                <span class="text-2xl group-hover:scale-125 transition"></span>
+                                <svg class="w-6 h-6 text-amber-dark group-hover:scale-125 transition" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path>
+                                </svg>
                                 <div>
                                     <p class="font-semibold text-primary">Email</p>
                                     <p class="text-secondary">hello@jenimpet.com</p>

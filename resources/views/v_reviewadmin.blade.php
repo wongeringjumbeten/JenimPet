@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>Manajemen Review - Admin Panel</title>
+    <link rel="icon" type="image/png" href="{{ asset('icons/JenimHamsterLogo.png') }}">
     @vite('resources/css/app.css')
     <style>
         @keyframes fadeSlideUp {

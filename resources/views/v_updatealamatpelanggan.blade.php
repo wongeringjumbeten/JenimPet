@@ -2,7 +2,8 @@
 <html lang="id">
 <head>
     <meta charset="UTF-8">
-    <title>Edit Alamat</title>
+    <title>Edit Alamat</title>\
+    <link rel="icon" type="image/png" href="{{ asset('icons/JenimHamsterLogo.png') }}">
     @vite('resources/css/app.css')
     <meta name="csrf-token" content="{{ csrf_token() }}">
 </head>

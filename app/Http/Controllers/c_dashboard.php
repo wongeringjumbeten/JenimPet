@@ -137,4 +137,14 @@ class c_dashboard extends Controller
         ];
         return $labels[$status] ?? ['label' => $status, 'color' => 'bg-gray-500'];
     }
+
+    public function landingPage()
+{
+    $produkTerbaru = \App\Models\m_produk::where('is_deleted', '0')
+        ->orderBy('created_at', 'desc')
+        ->limit(3)
+        ->get();
+
+    return view('v_landingpage', compact('produkTerbaru'));
+}
 }

@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <title>Tambah Produk - JenimPet</title>
+    <link rel="icon" type="image/png" href="{{ asset('icons/JenimHamsterLogo.png') }}">
     @vite('resources/css/app.css')
 </head>
 

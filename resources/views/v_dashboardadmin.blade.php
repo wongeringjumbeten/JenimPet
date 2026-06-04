@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dashboard Admin</title>
+    <link rel="icon" type="image/png" href="{{ asset('icons/JenimHamsterLogo.png') }}">
     @vite('resources/css/app.css')
     <style>
         @keyframes fadeSlideUp {
@@ -46,7 +47,7 @@
     {{-- HERO --}}
     <div class="mb-10 animate-fade-slide-up">
         <h1 class="text-4xl font-bold text-[#2C1810] mb-3">
-            Halo, Admin! 
+            Halo, Admin!
         </h1>
         <p class="text-[#6B5847] max-w-xl">
             Selamat datang di dashboard admin. Anda dapat memantau aktivitas penjualan,

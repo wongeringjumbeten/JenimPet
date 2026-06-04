@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>Review</title>
+    <link rel="icon" type="image/png" href="{{ asset('icons/JenimHamsterLogo.png') }}">
     @vite('resources/css/app.css')
     <style>
         @keyframes fadeSlideUp {
@@ -19,7 +20,7 @@
 
 <body class="bg-gradient-to-br from-[#EADBC8] via-[#D6BFA6] to-[#B8965A] min-h-screen">
 
-@include('layouts.navbar')
+@include('layouts.navbar_pelanggan')
 
 <div class="px-6 md:px-16 py-10 animate-fade-slide-up">
     <div class="mb-8">

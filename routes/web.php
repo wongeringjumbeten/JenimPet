@@ -17,9 +17,8 @@ Route::get('/test-google', function () {
     return redirect('/auth/google');
 });
 //LANDING LOGIN
-Route::get('/', function () {
-    return view('v_landingpage');
-});
+
+Route::get('/', [c_dashboard::class, 'landingPage']);
 
 Route::get('/login', function () {
     return view('v_login');

@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>Dashboard - JenimPet</title>
+    <link rel="icon" type="image/png" href="{{ asset('icons/JenimHamsterLogo.png') }}">
     @vite('resources/css/app.css')
     <style>
         @keyframes fadeSlideUp {
@@ -69,7 +70,7 @@
         <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
             <div>
                 <h1 class="text-3xl md:text-5xl font-bold text-[#2C1810] mb-3">
-                    Halo, {{ $user->nama_lengkap }}! 👋
+                    Halo, {{ $user->nama_lengkap }}!
                 </h1>
                 <p class="text-[#6B5847] max-w-xl">
                     Selamat datang di dashboard pelanggan JenimPet. Lihat pesanan terbaru, produk favorit, dan info toko di sini.
@@ -130,10 +131,10 @@
     <div class="mb-12 animate-scale-in">
         <div class="flex justify-between items-center mb-6">
             <h2 class="text-2xl font-bold text-[#2C1810] flex items-center gap-2">
-                <span class="text-3xl animate-float">🐹</span>
+                <span class="text-3xl animate-float"></span>
                 Produk Terbaru
             </h2>
-            <a href="{{ route('katalog.pelanggan') }}" class="text-[#D4A574] hover:underline text-sm flex items-center gap-1">
+            <a href="{{ route('katalog.pelanggan') }}" class="text-[#000000] hover:underline text-sm flex items-center gap-1">
                 Lihat semua →
             </a>
         </div>

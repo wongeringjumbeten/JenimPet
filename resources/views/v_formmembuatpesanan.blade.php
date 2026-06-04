@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>Checkout - JenimPet</title>
+    <link rel="icon" type="image/png" href="{{ asset('icons/JenimHamsterLogo.png') }}">
     @vite('resources/css/app.css')
     <style>
         @keyframes fadeSlideUp {
@@ -206,6 +207,7 @@
                     </div>
                 </div>
 
+
                 {{-- Catatan --}}
                 <div class="bg-white/70 backdrop-blur-xl rounded-3xl shadow-xl border border-[#E8D5C4] p-6">
                     <h2 class="text-xl font-bold text-[#2C1810] mb-4 flex items-center gap-2">
@@ -216,7 +218,30 @@
                     </h2>
                     <textarea name="catatan" id="catatan" rows="3" class="w-full p-3 rounded-xl border border-[#D4A574]/50 focus:ring-2 focus:ring-[#D4A574] transition" placeholder="Tambahkan catatan untuk penjual"></textarea>
                 </div>
+
+                {{-- Tombol WhatsApp --}}
+            <div class="bg-white/70 backdrop-blur-xl rounded-3xl shadow-xl border border-[#E8D5C4] p-6 transition-all duration-300 hover:shadow-2xl">
+                <div class="flex items-center gap-4">
+                    <div class="w-12 h-12 bg-green-500/20 rounded-full flex items-center justify-center flex-shrink-0">
+                        <svg class="w-6 h-6 text-green-500" fill="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M19.077 4.928C17.191 3.041 14.683 2 12.006 2 6.798 2 2.5 6.298 2.5 11.505c0 1.688.438 3.335 1.274 4.796L2.5 21.5l5.323-1.289c1.396.756 2.964 1.144 4.55 1.144h.004c5.202 0 9.5-4.298 9.5-9.505 0-2.677-1.041-5.186-2.928-7.082z M12.006 20.232c-1.443 0-2.855-.392-4.07-1.125l-.297-.176-3.196.774.824-3.079-.184-.3a8.247 8.247 0 01-1.312-4.401c0-4.563 3.718-8.281 8.285-8.281 2.212 0 4.291.864 5.85 2.423 1.56 1.56 2.419 3.639 2.419 5.85 0 4.563-3.718 8.281-8.285 8.281z M16.878 13.869c-.271-.136-1.586-.781-1.833-.87-.247-.09-.427-.136-.607.136-.18.272-.699.871-.856 1.049-.157.178-.314.2-.585.064-.271-.136-1.144-.422-2.178-1.344-.805-.718-1.348-1.604-1.507-1.875-.157-.271-.017-.418.12-.554.123-.123.271-.318.405-.478.135-.159.18-.271.27-.452.09-.181.045-.34-.022-.476s-.607-1.463-.83-2.003c-.219-.528-.44-.457-.607-.457-.157 0-.337-.02-.517-.02-.18 0-.472.067-.719.338-.247.271-.94.922-.94 2.245 0 1.323.959 2.598 1.095 2.78.136.18 1.892 2.89 4.585 4.053.64.276 1.141.442 1.532.567.644.204 1.23.175 1.693.106.517-.076 1.586-.648 1.81-1.274.224-.626.224-1.162.157-1.274-.067-.112-.247-.18-.518-.315z"/>
+                        </svg>
+                    </div>
+                    <div class="flex-1">
+                        <p class="font-semibold text-[#2C1810]">Mengalami kendala saat checkout?</p>
+                        <p class="text-sm text-[#6B5847]">Tim customer service kami siap membantu Anda. Klik tombol di samping untuk terhubung via WhatsApp.</p>
+                    </div>
+                    <a href="#" target="_blank"
+                    class="flex items-center gap-2 px-5 py-2.5 bg-green-500 hover:bg-green-600 text-white rounded-xl transition-all duration-200 hover:scale-105 shadow-md hover:shadow-lg flex-shrink-0">
+                        <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M19.077 4.928C17.191 3.041 14.683 2 12.006 2 6.798 2 2.5 6.298 2.5 11.505c0 1.688.438 3.335 1.274 4.796L2.5 21.5l5.323-1.289c1.396.756 2.964 1.144 4.55 1.144h.004c5.202 0 9.5-4.298 9.5-9.505 0-2.677-1.041-5.186-2.928-7.082z M12.006 20.232c-1.443 0-2.855-.392-4.07-1.125l-.297-.176-3.196.774.824-3.079-.184-.3a8.247 8.247 0 01-1.312-4.401c0-4.563 3.718-8.281 8.285-8.281 2.212 0 4.291.864 5.85 2.423 1.56 1.56 2.419 3.639 2.419 5.85 0 4.563-3.718 8.281-8.285 8.281z M16.878 13.869c-.271-.136-1.586-.781-1.833-.87-.247-.09-.427-.136-.607.136-.18.272-.699.871-.856 1.049-.157.178-.314.2-.585.064-.271-.136-1.144-.422-2.178-1.344-.805-.718-1.348-1.604-1.507-1.875-.157-.271-.017-.418.12-.554.123-.123.271-.318.405-.478.135-.159.18-.271.27-.452.09-.181.045-.34-.022-.476s-.607-1.463-.83-2.003c-.219-.528-.44-.457-.607-.457-.157 0-.337-.02-.517-.02-.18 0-.472.067-.719.338-.247.271-.94.922-.94 2.245 0 1.323.959 2.598 1.095 2.78.136.18 1.892 2.89 4.585 4.053.64.276 1.141.442 1.532.567.644.204 1.23.175 1.693.106.517-.076 1.586-.648 1.81-1.274.224-.626.224-1.162.157-1.274-.067-.112-.247-.18-.518-.315z"/>
+                        </svg>
+                        <span>Hubungi WhatsApp</span>
+                    </a>
+                </div>
             </div>
+            </div>
+
 
             {{-- FORM KANAN: Ringkasan --}}
             <div class="lg:w-96 space-y-6">
